@@ -22,7 +22,7 @@ monitor.on('inbound', function (call) {
         if (a_obj[call.caller]) { 
             io.sockets.emit('call', a_obj[call.caller]);
         }
-        if (!obj[call.caller]) { 
+        if (!a_obj[call.caller]) { 
             io.sockets.emit('call', call.caller);
         }
         };
