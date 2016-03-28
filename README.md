@@ -2,18 +2,19 @@
 This an extension for the [MagicMirror](https://github.com/MichMich/MagicMirror). It provides a callmonitor for FRITZ!Box users alerting them about incoming calls.
 
 ## Usage
-1. Copy the content of this repository into a subdirectory called `callmonitor` inside your MagicMirror's `modules` folder.
-2. Change the IP adress in `node_helper.js` to the IP of your FRITZ!Box.
-3. Add your adressbook in `addressbook.js`.
-4. Open a terminal and navigate into the `callmonitor` folder then install the dependencies (see bellow).
-5. Activate the callmonitor of your FRITZ!Box by calling `#96*5*` on a connected phone.
-6. Restart your mirror
-7. Done
+1. Navigate into your MagicMirror's `modules` folder and execute `git clone https://github.com/paviro/MMM-FRITZ-Box-Callmonitor.git`. A new folder will appear navigate into it.
+2. Execute `npm install` to install the dependencies.
+3. Add `MMM-FRITZ-Box-Callmonitor` to your config.js, you do not have to set a position.
+4. Change the IP adress in `node_helper.js` to the IP of your FRITZ!Box.
+5. Add your adressbook in `addressbook.js`.
+6. Activate the callmonitor of your FRITZ!Box by calling `#96*5*` on a connected phone.
+7. Restart your mirror
+8. Done
 
 ## Dependencies
 - This module is for the v2 module API (currently in development) and needs [this](https://github.com/MichMich/MagicMirror/pull/106) pull request to work!
-- [node-fritzbox-callmonitor](https://www.npmjs.com/package/node-fritzbox-callmonitor) (npm install node-fritzbox-callmonitor)
-- [socket.io](http://socket.io/) (npm install socket.io)
+- [node-fritzbox-callmonitor](https://www.npmjs.com/package/node-fritzbox-callmonitor)
+- [socket.io](http://socket.io/)
 
 ## Open Source Licenses
 ###[sweetalert](https://github.com/t4t5/sweetalert)

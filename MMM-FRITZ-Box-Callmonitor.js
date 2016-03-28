@@ -1,9 +1,9 @@
 /* global Module */
 
 /* Magic Mirror
- * Module: CallMonitor
+ * Module: MMM-FRITZ-Box-Callmonitor
  *
- * By Paul-Vincent Roll http://michaelteeuw.nl
+ * By Paul-Vincent Roll http://paulvincentroll.com
  * MIT Licensed.
  */
 
@@ -12,7 +12,7 @@ Module.create({
 	// Default module config.
 	defaults: {
 		server: 'http://localhost:2344',
-		title: "Eingehender Anruf",
+		title: "Incoming Call",
 	},
 	
 	getScripts: function() {

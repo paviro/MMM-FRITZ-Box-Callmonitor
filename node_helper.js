@@ -5,7 +5,6 @@ const CallMonitor = require('node-fritzbox-callmonitor');
 
 process.on('uncaughtException', function (err) {
   console.log("[" + Date() + "]: " + err);
-  //io.sockets.emit('error', "[" + Date() + "]: " + err);
 });
 
 //Callmonitor
@@ -20,8 +19,8 @@ var monitor = new CallMonitor(fritzbox.address, fritzbox.port);
 //Logic
 monitor.on('inbound', function (call) {
     if (call.caller != "") {
-        if (obj[call.caller]) { 
-            io.sockets.emit('call', obj[call.caller]);
+        if (a_obj[call.caller]) { 
+            io.sockets.emit('call', a_obj[call.caller]);
         }
         if (!obj[call.caller]) { 
             io.sockets.emit('call', call.caller);
