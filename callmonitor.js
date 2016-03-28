@@ -29,7 +29,7 @@ Module.create({
 			if (data != 'clear'){
 				swal({
 					title: title, 
-					imageUrl: "modules/callmonitor/img/phone.png",  
+					imageUrl: "modules/MMM-FRITZ-Box-Callmonitor/img/phone.png",  
 					text: "<span style='font-size:30px'>" + data + "<span>",
 					html: true,
 					showConfirmButton: false 
