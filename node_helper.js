@@ -1,33 +1,33 @@
 'use strict';
-
-const MMSocket = require('../../js/socketclient.js');
-const socket = new MMSocket('MMM-FRITZ-Box-Callmonitor');
+const NodeHelper = require('node_helper');
 const CallMonitor = require('node-fritzbox-callmonitor');
-
-process.on('uncaughtException', function (err) {
-  console.log("[" + Date() + "]: " + err);
-});
-
-//Setup
 require('./addressbook.js');
-var fritzbox = {
-  address: '192.168.178.1', //change IP here!
-  port: '1012'
-};
-var monitor = new CallMonitor(fritzbox.address, fritzbox.port);
 
-//Logic
-monitor.on('inbound', function (call) {
-    if (call.caller != "") {
-        if (a_obj[call.caller]) { 
-          socket.sendNotification('call', a_obj[call.caller]);
-        }
-        if (!a_obj[call.caller]) { 
-          socket.sendNotification('call', call.caller);
-        }
-        };
-});
+module.exports = NodeHelper.create({
+  // Subclass start method.
+  start: function() {
+    var self = this;
+    var fritzbox = {
+      address: '192.168.178.1', //change IP here!
+      port: '1012'
+      };
+    console.log('Starting module: ' + this.name);
+    var monitor = new CallMonitor(fritzbox.address, fritzbox.port);
 
-monitor.on('disconnected', function (call) {
-    socket.sendNotification('call', 'clear');
+    //Logic
+    monitor.on('inbound', function (call) {
+        if (call.caller != "") {
+            if (a_obj[call.caller]) { 
+              self.sendSocketNotification('call', a_obj[call.caller]);
+            }
+            if (!a_obj[call.caller]) { 
+              self.sendSocketNotification('call', call.caller);
+            }
+            };
+    });
+
+    monitor.on('disconnected', function (call) {
+         self.sendSocketNotification('call', 'clear');
+    });
+  }
 });
