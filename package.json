@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/paviro/MMM-FRITZ-Box-Callmonitor#readme",
   "dependencies": {
-    "socket.io": "latest",
     "node-fritzbox-callmonitor": "latest"
     }
 }

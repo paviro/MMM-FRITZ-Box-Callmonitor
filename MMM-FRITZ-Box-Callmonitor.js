@@ -11,43 +11,42 @@ Module.create({
 	
 	// Default module config.
 	defaults: {
-		server: 'http://localhost:2344',
 		title: "Incoming Call",
+		number_font_size: "30px"
 	},
 	
 	getScripts: function() {
-		return [
-			this.config.server + '/socket.io/socket.io.js',
-			'sweetalert.js'
-		];
+		return ['sweetalert.js'];
 	},
 	
-	start: function() {
-		const callmonitor = io.connect(this.config.server);
-		var title = this.config.title
-		callmonitor.on('call', function (data){
-			if (data != 'clear'){
+	getStyles: function() {
+		return ['sweetalert.css'];
+	},
+	
+	// Override socket notification handler.
+	socketNotificationReceived: function(notification, payload) {
+		if (notification === 'call') {
+			if (payload != 'clear'){
 				swal({
-					title: title, 
-					imageUrl: "modules/MMM-FRITZ-Box-Callmonitor/img/phone.png",  
-					text: "<span style='font-size:30px'>" + data + "<span>",
+					title: this.config.title, 
+					imageUrl: "modules/" + this.name + "/img/phone.png",  
+					text: "<span style='font-size:" + this.config.number_font_size + "'>" + payload + "<span>",
 					html: true,
 					showConfirmButton: false 
 					});
 			}
-			if (data == 'clear'){
+			if (payload == 'clear'){
 				swal.close()
 			}
-		});
-		    Log.info('Starting module: ' + this.name);
-		},
-
-
-	getStyles: function() {
-		return [
-			'sweetalert.css'
-		];
+			
+		}
 	},
-
+	
+	start: function() {
+		//Open Socket connection
+		this.sendSocketNotification('connect', null);
+		
+		Log.info('Starting module: ' + this.name);
+		}
 
 });

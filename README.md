@@ -12,9 +12,8 @@ This an extension for the [MagicMirror](https://github.com/MichMich/MagicMirror)
 8. Done
 
 ## Dependencies
-- This module is for the Magic Mirror Software Version 2 (currently in development).
+- This module is for the Magic Mirror Software Version 2 (currently in development)
 - [node-fritzbox-callmonitor](https://www.npmjs.com/package/node-fritzbox-callmonitor) (installed by `npm install` in step 2)
-- [socket.io](http://socket.io/) (installed by `npm install` in step 2)
 
 ## Open Source Licenses
 ###[sweetalert](https://github.com/t4t5/sweetalert)

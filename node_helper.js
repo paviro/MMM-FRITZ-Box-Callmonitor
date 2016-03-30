@@ -1,13 +1,13 @@
 'use strict';
-const io = require('socket.io').listen(2344);
-const net = require('net');
+
+const MMSocket = require('../../js/socketclient.js');
+const socket = new MMSocket('MMM-FRITZ-Box-Callmonitor');
 const CallMonitor = require('node-fritzbox-callmonitor');
 
 process.on('uncaughtException', function (err) {
   console.log("[" + Date() + "]: " + err);
 });
 
-//Callmonitor
 //Setup
 require('./addressbook.js');
 var fritzbox = {
@@ -20,16 +20,14 @@ var monitor = new CallMonitor(fritzbox.address, fritzbox.port);
 monitor.on('inbound', function (call) {
     if (call.caller != "") {
         if (a_obj[call.caller]) { 
-            io.sockets.emit('call', a_obj[call.caller]);
+          socket.sendNotification('call', a_obj[call.caller]);
         }
         if (!a_obj[call.caller]) { 
-            io.sockets.emit('call', call.caller);
+          socket.sendNotification('call', call.caller);
         }
         };
 });
 
 monitor.on('disconnected', function (call) {
-    io.sockets.emit('call', 'clear');
+    socket.sendNotification('call', 'clear');
 });
-
-//End Callmonitor
