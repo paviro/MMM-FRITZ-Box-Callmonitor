@@ -7,7 +7,7 @@
  * MIT Licensed.
  */
 
-Module.create({
+Module.register('MMM-FRITZ-Box-Callmonitor',{
 	
 	// Default module config.
 	defaults: {
