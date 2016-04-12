@@ -12,7 +12,9 @@ Module.register('MMM-FRITZ-Box-Callmonitor',{
 	// Default module config.
 	defaults: {
 		title: "Incoming Call",
-		number_font_size: "30px"
+		NumberFontSize: "30px",
+		fritzIP: '192.168.178.1',
+		fritzPort: 1012
 	},
 	
 	// Override socket notification handler.
@@ -21,7 +23,7 @@ Module.register('MMM-FRITZ-Box-Callmonitor',{
 			if (payload != 'clear'){
 				self.sendNotification("SHOW_ALERT", {
 					title: this.config.title,
-					message: "<span style='font-size:" + this.config.number_font_size + "'>" + payload + "<span>",
+					message: "<span style='font-size:" + this.config.NumberFontSize + "'>" + payload + "<span>",
 					imageFA: "phone"
 				}); 
 			}
@@ -34,8 +36,7 @@ Module.register('MMM-FRITZ-Box-Callmonitor',{
 	
 	start: function() {
 		//Open Socket connection
-		this.sendSocketNotification('connect', null);
-		
+		this.sendSocketNotification('CONFIG', this.config);
 		Log.info('Starting module: ' + this.name);
 		}
 
