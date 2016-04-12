@@ -17,10 +17,10 @@ module.exports = NodeHelper.create({
     //Logic
     monitor.on('inbound', function (call) {
         if (call.caller != "") {
-            if (a_obj[call.caller]) { 
+            if (a_obj[call.caller]) {
               self.sendSocketNotification('call', a_obj[call.caller]);
             }
-            if (!a_obj[call.caller]) { 
+            if (!a_obj[call.caller]) {
               self.sendSocketNotification('call', call.caller);
             }
             };

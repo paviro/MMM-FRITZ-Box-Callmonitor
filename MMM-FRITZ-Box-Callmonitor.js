@@ -15,28 +15,18 @@ Module.register('MMM-FRITZ-Box-Callmonitor',{
 		number_font_size: "30px"
 	},
 	
-	getScripts: function() {
-		return ['sweetalert.js'];
-	},
-	
-	getStyles: function() {
-		return ['sweetalert.css'];
-	},
-	
 	// Override socket notification handler.
 	socketNotificationReceived: function(notification, payload) {
 		if (notification === 'call') {
 			if (payload != 'clear'){
-				swal({
-					title: this.config.title, 
-					imageUrl: "modules/" + this.name + "/img/phone.png",  
-					text: "<span style='font-size:" + this.config.number_font_size + "'>" + payload + "<span>",
-					html: true,
-					showConfirmButton: false 
-					});
+				self.sendNotification("SHOW_ALERT", {
+					title: this.config.title,
+					message: "<span style='font-size:" + this.config.number_font_size + "'>" + payload + "<span>",
+					imageFA: "phone"
+				}); 
 			}
 			if (payload == 'clear'){
-				swal.close()
+				self.sendNotification("HIDE_ALERT");
 			}
 			
 		}
