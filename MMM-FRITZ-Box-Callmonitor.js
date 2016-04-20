@@ -21,14 +21,14 @@ Module.register('MMM-FRITZ-Box-Callmonitor',{
 	socketNotificationReceived: function(notification, payload) {
 		if (notification === 'call') {
 			if (payload != 'clear'){
-				self.sendNotification("SHOW_ALERT", {
+				this.sendNotification("SHOW_ALERT", {
 					title: this.config.title,
 					message: "<span style='font-size:" + this.config.NumberFontSize + "'>" + payload + "<span>",
 					imageFA: "phone"
 				}); 
 			}
 			if (payload == 'clear'){
-				self.sendNotification("HIDE_ALERT");
+				this.sendNotification("HIDE_ALERT");
 			}
 			
 		}
