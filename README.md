@@ -14,8 +14,6 @@ The entry in the `module array` in your `config.js` can look like the following.
 {
 	module: 'MMM-Facial-Recognition',
 	config: {
-		//Title for the incoming messages alert
-		title: "Incoming Call",
 		//Font size of the phonenumber displayed in the alert
 		NumberFontSize: "30px",
 		//IP Adress of your FRITZ!Box
