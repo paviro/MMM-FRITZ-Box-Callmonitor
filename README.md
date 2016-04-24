@@ -12,7 +12,7 @@ The entry in the `module array` in your `config.js` can look like the following.
 
 ```
 {
-	module: 'MMM-Facial-Recognition',
+	module: 'MMM-FRITZ-Box-Callmonitor',
 	config: {
 		//Font size of the phonenumber displayed in the alert
 		NumberFontSize: "30px",
