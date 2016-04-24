@@ -4,8 +4,7 @@ This an extension for the [MagicMirror](https://github.com/MichMich/MagicMirror)
 ## Installation
 1. Navigate into your MagicMirror's `modules` folder and execute `git clone https://github.com/paviro/MMM-FRITZ-Box-Callmonitor.git`. A new folder will appear navigate into it.
 2. Execute `npm install` to install the dependencies.
-3. Add your adressbook in `addressbook.js`.
-4. Activate the callmonitor of your FRITZ!Box by calling `#96*5*` on a connected phone.
+3. Activate the callmonitor of your FRITZ!Box by calling `#96*5*` on a connected phone.
 
 ## Usage
 The entry in the `module array` in your `config.js` can look like the following. (NOTE: You only have to add the variables to config if want to change its standard value.)
