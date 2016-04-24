@@ -16,7 +16,7 @@ Module.register("MMM-FRITZ-Box-Callmonitor",{
 		fritzIP: "192.168.178.1",
 		fritzPort: 1012,
 		maximumEntrieDistance: 60,
-		maximumEntries: 2,
+		maximumEntries: 5,
 		fade: true,
 		fadePoint: 0.25
 		
