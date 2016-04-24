@@ -1,8 +1,8 @@
 "use strict";
 const NodeHelper = require("node_helper");
 const CallMonitor = require("node-fritzbox-callmonitor");
-var vcard = require("vcard-json");
-var phone = require("phone-formatter");
+const vcard = require("vcard-json");
+const phone = require("phone-formatter");
 
 module.exports = NodeHelper.create({
   // Subclass start method.
