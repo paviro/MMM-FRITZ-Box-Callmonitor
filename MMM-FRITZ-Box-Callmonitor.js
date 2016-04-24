@@ -30,6 +30,10 @@ Module.register("MMM-FRITZ-Box-Callmonitor",{
 		};
 	},
 	
+	getScripts: function() {
+		return ["moment.js"];
+	},
+	
 	// Override socket notification handler.
 	socketNotificationReceived: function(notification, payload) {
 		if (notification === "call") {
