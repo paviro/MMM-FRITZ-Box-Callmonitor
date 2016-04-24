@@ -7,7 +7,8 @@ This an extension for the [MagicMirror](https://github.com/MichMich/MagicMirror)
 3. Activate the callmonitor of your FRITZ!Box by calling `#96*5*` on a connected phone.
 
 ## Usage
-The entry in the `module array` in your `config.js` can look like the following. (NOTE: You only have to add the variables to config if want to change its standard value.)
+The entry in the `module array` in your `config.js` can look like the following. If you only want alerts but no call history simply remove the `position` from the config. 
+(NOTE: You only have to add the variables to config if want to change its standard value.)
 
 ```
 {
@@ -37,3 +38,5 @@ The entry in the `module array` in your `config.js` can look like the following.
 
 ## Dependencies
 - [node-fritzbox-callmonitor](https://www.npmjs.com/package/node-fritzbox-callmonitor) (installed by `npm install`)
+- [vcard-json](https://www.npmjs.com/package/vcard-json) (installed by `npm install`)
+- [phone-formatter](https://www.npmjs.com/package/phone-formatter) (installed by `npm install`)
