@@ -16,6 +16,8 @@ The entry in the `module array` in your `config.js` can look like the following.
 	config: {
 		//Font size of the phonenumber displayed in the alert
 		NumberFontSize: "30px",
+		//Path to a .vcf file for number to name conversion
+		vCard: false,
 		//IP Adress of your FRITZ!Box
 		fritzIP: '192.168.178.1',
 		//Port of your FRITZ!Box (you should not have to change that)

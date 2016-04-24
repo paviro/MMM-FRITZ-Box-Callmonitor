@@ -12,6 +12,7 @@ Module.register('MMM-FRITZ-Box-Callmonitor',{
 	// Default module config.
 	defaults: {
 		NumberFontSize: "30px",
+		vCard: false,
 		fritzIP: '192.168.178.1',
 		fritzPort: 1012
 	},
