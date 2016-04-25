@@ -41,7 +41,7 @@ Module.register("MMM-FRITZ-Box-Callmonitor",{
 				//Show alert on UI
 				this.sendNotification("SHOW_ALERT", {
 					title: this.translate("title"),
-					message: "<span style='font-size:" + str(this.config.NumberFontSize) + "px'>" + payload + "<span>",
+					message: "<span style='font-size:" + this.config.NumberFontSize.toString() + "px'>" + payload + "<span>",
 					imageFA: "phone"
 				});
 				
