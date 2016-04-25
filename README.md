@@ -6,36 +6,114 @@ This an extension for the [MagicMirror](https://github.com/MichMich/MagicMirror)
 2. Execute `npm install` to install the dependencies.
 3. Activate the callmonitor of your FRITZ!Box by calling `#96*5*` on a connected phone.
 
-## Usage
-The entry in the `module array` in your `config.js` can look like the following. If you only want alerts but no call history simply remove the `position` from the config. 
-(NOTE: You only have to add the variables to config if want to change its standard value.)
+## Using the module
 
-```
-{
-	module: 'MMM-FRITZ-Box-Callmonitor',
-	position: "top_right",
-	header: "Recent calls",
-	config: {
-		//Font size of the phonenumber displayed in the alert
-		NumberFontSize: "30px",
-		//Path to a .vcf file for number to name conversion
-		vCard: false,
-		minimumCallLength: 0,
-		//Time in minutes after which recent calls get removed from list
-		maximumCallDistance: 60,
-		//Number of recent calls to be shown
-		maximumCalls: 2,
-		//Fade todos to black. (Gradient)
-		fade: true,
-		//Where to start the fade
-		fadePoint: 0.25,
-		//IP Adress of your FRITZ!Box
-		fritzIP: '192.168.178.1',
-		//Port of your FRITZ!Box (you should not have to change that)
-		fritzPort: 1012
+To use this module, add it to the modules array in the `config/config.js` file:
+````javascript
+modules: [
+	{
+		module: 'MMM-FRITZ-Box-Callmonitor',
+		position: 'top_right',	// This can be any of the regions. Best results in left or right regions.
+		header: "Recent calls", //This is optional
+		config: {
+			// See 'Configuration options' for more information.
+		}
 	}
-}
-```
+]
+````
+
+## Configuration options
+
+The following properties can be configured:
+
+
+<table width="100%">
+	<!-- why, markdown... -->
+	<thead>
+		<tr>
+			<th>Option</th>
+			<th width="100%">Description</th>
+		</tr>
+	<thead>
+	<tbody>
+		<tr>
+			<td><code>NumberFontSize</code></td>
+			<td>Font size of the phonenumber displayed in the alert<br>
+				<br><b>Possible values:</b> any <code>int</code> or <code>float</code>
+				<br><b>Default value:</b> <code>30</code>
+			</td>
+		</tr>
+		<tr>
+			<td><code>vCard</code></td>
+			<td>Absolute path to a .vcf file for number to name conversion.<br>
+				<br><b>Default value:</b> <code>false</code>
+			</td>
+		</tr>
+		<tr>
+			<td><code>minimumCallLength</code></td>
+			<td>There is no real way to tell whether a call was missed or not because voice mails count as connected calls. You can however change the time a call has to be for it to be considered not missed. You should probably use a value as long as your voice mail. Default <code>0</code> means any calls gets added to the history.<br>
+				<br><b>Possible values:</b> <code>time</code> in <code>seconds</code>
+				<br><b>Default value:</b> <code>0</code>
+			</td>
+		</tr>
+		<tr>
+			<td><code>maximumCallDistance</code></td>
+			<td>Time after which calls get removed from the recent calls list.<br>
+				<br><b>Possible values:</b> <code>time</code> in <code>min</code>
+				<br><b>Default value:</b> <code>60</code>
+			</td>
+		</tr>
+		<tr>
+			<td><code>maximumCalls</code></td>
+			<td>Number of calls to be shown in the list.<br>
+				<br><b>Possible values:</b> any <code>int</code>
+				<br><b>Default value:</b> <code>5</code>
+			</td>
+		</tr>
+		<tr>
+			<td><code>fetchInterval</code></td>
+			<td>How often does the content needs to be fetched? (Milliseconds)<br>
+				<br><b>Possible values:</b> <code>1000</code> - <code>86400000</code>
+				<br><b>Default value:</b> <code>300000</code> (5 minutes)
+			</td>
+		</tr>
+		<tr>
+			<td><code>animationSpeed</code></td>
+			<td>Speed of the update animation. (Milliseconds)<br>
+				<br><b>Possible values:</b><code>0</code> - <code>5000</code>
+				<br><b>Default value:</b> <code>2000</code> (2 seconds)
+			</td>
+		</tr>
+		<tr>
+			<td><code>fade</code></td>
+			<td>Fade the future events to black. (Gradient)<br>
+				<br><b>Possible values:</b> <code>true</code> or <code>false</code>
+				<br><b>Default value:</b> <code>true</code>
+			</td>
+		</tr>
+		<tr>
+			<td><code>fadePoint</code></td>
+			<td>Where to start fade?<br>
+				<br><b>Possible values:</b> <code>0</code> (top of the list) - <code>1</code> (bottom of list)
+				<br><b>Default value:</b> <code>0.25</code>
+			</td>
+		</tr>
+		<tr>
+			<td><code>fritzIP</code></td>
+			<td>IP Adress of your FRITZ!Box.<br>
+				<br><b>Possible values:</b> IP Address
+				<br><b>Default value:</b> <code>192.168.178.1</code>
+			</td>
+		</tr>
+		<tr>
+			<td><code>fritzPort</code></td>
+			<td>Port of your FRITZ!Box callmonitor (you should not have to change that)<br>
+				<br><b>Possible values:</b> any <code>int</code>
+				<br><b>Default value:</b> <code>1012</code>
+			</td>
+		</tr>
+	</tbody>
+</table>
 
 ## Dependencies
 - [node-fritzbox-callmonitor](https://www.npmjs.com/package/node-fritzbox-callmonitor) (installed by `npm install`)

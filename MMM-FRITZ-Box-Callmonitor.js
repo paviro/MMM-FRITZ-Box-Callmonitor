@@ -11,7 +11,7 @@ Module.register("MMM-FRITZ-Box-Callmonitor",{
 	
 	// Default module config.
 	defaults: {
-		NumberFontSize: "30px",
+		NumberFontSize: 30,
 		vCard: false,
 		fritzIP: "192.168.178.1",
 		fritzPort: 1012,
@@ -41,7 +41,7 @@ Module.register("MMM-FRITZ-Box-Callmonitor",{
 				//Show alert on UI
 				this.sendNotification("SHOW_ALERT", {
 					title: this.translate("title"),
-					message: "<span style='font-size:" + this.config.NumberFontSize + "'>" + payload + "<span>",
+					message: "<span style='font-size:" + str(this.config.NumberFontSize) + "px'>" + payload + "<span>",
 					imageFA: "phone"
 				});
 				
