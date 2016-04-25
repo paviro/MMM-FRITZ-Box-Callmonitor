@@ -38,7 +38,7 @@ The following properties can be configured:
 	<tbody>
 		<tr>
 			<td><code>NumberFontSize</code></td>
-			<td>Font size of the phonenumber displayed in the alert<br>
+			<td>Font size of the phone number displayed in the alert.<br>
 				<br><b>Possible values:</b> any <code>int</code> or <code>float</code>
 				<br><b>Default value:</b> <code>30</code>
 			</td>
@@ -46,56 +46,29 @@ The following properties can be configured:
 		<tr>
 			<td><code>vCard</code></td>
 			<td>Absolute path to a .vcf file for number to name conversion.<br>
+				<br><b>Possible values:</b> <code>string</code>
 				<br><b>Default value:</b> <code>false</code>
 			</td>
 		</tr>
 		<tr>
 			<td><code>minimumCallLength</code></td>
-			<td>There is no real way to tell whether a call was missed or not because voice mails count as connected calls. You can however change the time a call has to be for it to be considered not missed. You should probably use a value as long as your voice mail. Default <code>0</code> means any calls gets added to the history.<br>
+			<td>There is no real way to tell whether a call was missed or not because voice mails count as connected calls. You can however change the time a call has to be for it to be considered not missed. You should probably use a value as long as your voice mail. <br>Default <code>0</code> means any call gets added to the history.<br>
 				<br><b>Possible values:</b> <code>time</code> in <code>seconds</code>
 				<br><b>Default value:</b> <code>0</code>
 			</td>
 		</tr>
 		<tr>
 			<td><code>maximumCallDistance</code></td>
-			<td>Time after which calls get removed from the recent calls list.<br>
+			<td>Time after which calls get removed from the list.<br>
 				<br><b>Possible values:</b> <code>time</code> in <code>min</code>
 				<br><b>Default value:</b> <code>60</code>
 			</td>
 		</tr>
 		<tr>
 			<td><code>maximumCalls</code></td>
-			<td>Number of calls to be shown in the list.<br>
+			<td>Maximum number of calls to be shown in the list.<br>
 				<br><b>Possible values:</b> any <code>int</code>
 				<br><b>Default value:</b> <code>5</code>
-			</td>
-		</tr>
-		<tr>
-			<td><code>fetchInterval</code></td>
-			<td>How often does the content needs to be fetched? (Milliseconds)<br>
-				<br><b>Possible values:</b> <code>1000</code> - <code>86400000</code>
-				<br><b>Default value:</b> <code>300000</code> (5 minutes)
-			</td>
-		</tr>
-		<tr>
-			<td><code>animationSpeed</code></td>
-			<td>Speed of the update animation. (Milliseconds)<br>
-				<br><b>Possible values:</b><code>0</code> - <code>5000</code>
-				<br><b>Default value:</b> <code>2000</code> (2 seconds)
-			</td>
-		</tr>
-		<tr>
-			<td><code>fade</code></td>
-			<td>Fade the future events to black. (Gradient)<br>
-				<br><b>Possible values:</b> <code>true</code> or <code>false</code>
-				<br><b>Default value:</b> <code>true</code>
-			</td>
-		</tr>
-		<tr>
-			<td><code>fadePoint</code></td>
-			<td>Where to start fade?<br>
-				<br><b>Possible values:</b> <code>0</code> (top of the list) - <code>1</code> (bottom of list)
-				<br><b>Default value:</b> <code>0.25</code>
 			</td>
 		</tr>
 		<tr>
@@ -110,6 +83,20 @@ The following properties can be configured:
 			<td>Port of your FRITZ!Box callmonitor (you should not have to change that)<br>
 				<br><b>Possible values:</b> any <code>int</code>
 				<br><b>Default value:</b> <code>1012</code>
+			</td>
+		</tr>
+		<tr>
+			<td><code>fade</code></td>
+			<td>Fade the future events to black. (Gradient)<br>
+				<br><b>Possible values:</b> <code>true</code> or <code>false</code>
+				<br><b>Default value:</b> <code>true</code>
+			</td>
+		</tr>
+		<tr>
+			<td><code>fadePoint</code></td>
+			<td>Where to start fade?<br>
+				<br><b>Possible values:</b> <code>0</code> (top of the list) - <code>1</code> (bottom of list)
+				<br><b>Default value:</b> <code>0.25</code>
 			</td>
 		</tr>
 	</tbody>
