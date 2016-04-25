@@ -14,13 +14,16 @@ modules: [
 	{
 		module: 'MMM-FRITZ-Box-Callmonitor',
 		position: 'top_right',	// This can be any of the regions. Best results in left or right regions.
-		header: "Recent calls", //This is optional
+		header: "Recent calls", // This is optional
 		config: {
 			// See 'Configuration options' for more information.
 		}
 	}
 ]
 ````
+
+### MMM-Callmonitor-Current-Call
+If you are interested in having a list with all active calls as well, check out [MMM-Callmonitor-Current-Call](https://github.com/paviro/MMM-Callmonitor-Current-Call). 
 
 ## Configuration options
 
@@ -87,7 +90,7 @@ The following properties can be configured:
 		</tr>
 		<tr>
 			<td><code>fade</code></td>
-			<td>Fade the future events to black. (Gradient)<br>
+			<td>Fade old calls to black. (Gradient)<br>
 				<br><b>Possible values:</b> <code>true</code> or <code>false</code>
 				<br><b>Default value:</b> <code>true</code>
 			</td>
