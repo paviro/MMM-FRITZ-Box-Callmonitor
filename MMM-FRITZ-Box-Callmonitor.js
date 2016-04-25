@@ -35,18 +35,28 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 		return ["moment.js"];
 	},
 
+	notificationReceived: function(notification, payload, sender) {
+		if (notification === "PHONE_LOOKUP_RESULT") {
+			if (payload.resolved == true) {
+				text = payload.name;
+			} else {
+				text = payload.request;
+			}
+			this.sendNotification("SHOW_ALERT", {
+				title: this.translate("title"),
+				message: "<span style='font-size:" + this.config.numberFontSize.toString() + "px'>" + text + "<span>",
+				imageFA: "phone"
+			});
+			//Set active Alert to current call
+			this.activeAlert = payload.request;
+		}
+	},
+
 	// Override socket notification handler.
 	socketNotificationReceived: function(notification, payload) {
 		if (notification === "call") {
 			//Show alert on UI
-			this.sendNotification("SHOW_ALERT", {
-				title: this.translate("title"),
-				message: "<span style='font-size:" + this.config.numberFontSize.toString() + "px'>" + payload + "<span>",
-				imageFA: "phone"
-			});
-
-			//Set active Alert to current call
-			this.activeAlert = payload;
+			this.sendNotification("PHONE_LOOKUP", payload);
 		}
 		if (notification === "connected") {
 			//Send notification for currentCall module

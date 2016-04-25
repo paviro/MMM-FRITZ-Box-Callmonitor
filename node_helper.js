@@ -65,7 +65,7 @@ module.exports = NodeHelper.create({
 						monitor.on("inbound", function(call) {
 										//If caller is not empty
 										if (call.caller != "") {
-											self.sendSocketNotification("call", self.getName(call.caller));
+											self.sendSocketNotification("call", call.caller);
 										};
 									});
 
