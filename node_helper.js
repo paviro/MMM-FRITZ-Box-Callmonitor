@@ -8,6 +8,8 @@ module.exports = NodeHelper.create({
   // Subclass start method.
   start: function() {
     this.started = false
+    //create adressbook dictionary 
+    this.AddressBook = {}
     console.log("Starting module: " + this.name);
   },
   
@@ -41,8 +43,6 @@ module.exports = NodeHelper.create({
         
         //If path to contact file is given
         if (this.config.vCard){
-          //create adressbook dictionary 
-          this.AddressBook = {}
           //Parse contact file
           vcard.parseVcardFile(this.config.vCard, function(err, data){
             //In case there is an error reading the vcard file
@@ -65,23 +65,19 @@ module.exports = NodeHelper.create({
         monitor.on("inbound", function (call) {
             //If caller is not empty
             if (call.caller != "") {
-                //if path to contact file is given
-                if (self.config.vCard){
-                  //Get name via getName() and send to interface
-                  self.sendSocketNotification("call", self.getName(call.caller));
-                }
-                //path to contact file is not given
-                else {
-                  //send raw number to interface
-                  self.sendSocketNotification("call", call.caller);
-                }
+                self.sendSocketNotification("call", self.getName(call.caller));
             };
         });
+        
+        //Call accepted
+        monitor.on('connected', function (call) {
+          self.sendSocketNotification("connected", self.getName(call.caller));
+        });
 
-        //Caller disconnected / Call accepted
+        //Caller disconnected
         monitor.on("disconnected", function (call) {
              //send clear command to interface
-             self.sendSocketNotification("call", "clear");
+             self.sendSocketNotification("disconnected", {"caller":self.getName(call.caller), "duration": call.duration});
         });
         console.log(this.name + " is waiting for incoming calls.");
       };

@@ -20,10 +20,11 @@ The entry in the `module array` in your `config.js` can look like the following.
 		NumberFontSize: "30px",
 		//Path to a .vcf file for number to name conversion
 		vCard: false,
+		minimumCallLength: 0,
 		//Time in minutes after which recent calls get removed from list
-		maximumEntrieDistance: 60,
+		maximumCallDistance: 60,
 		//Number of recent calls to be shown
-		maximumEntries: 2,
+		maximumCalls: 2,
 		//Fade todos to black. (Gradient)
 		fade: true,
 		//Where to start the fade

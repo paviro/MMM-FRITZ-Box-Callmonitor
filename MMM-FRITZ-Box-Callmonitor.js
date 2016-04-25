@@ -15,8 +15,9 @@ Module.register("MMM-FRITZ-Box-Callmonitor",{
 		vCard: false,
 		fritzIP: "192.168.178.1",
 		fritzPort: 1012,
-		maximumEntrieDistance: 60,
-		maximumEntries: 5,
+		minimumCallLength: 0,
+		maximumCallDistance: 60,
+		maximumCalls: 5,
 		fade: true,
 		fadePoint: 0.25
 		
@@ -37,29 +38,53 @@ Module.register("MMM-FRITZ-Box-Callmonitor",{
 	// Override socket notification handler.
 	socketNotificationReceived: function(notification, payload) {
 		if (notification === "call") {
-			if (payload != "clear"){
-				//Add call to call_history (timestamp and caller)
-				this.call_history.push({"time": moment(), "caller": payload})
 				//Show alert on UI
 				this.sendNotification("SHOW_ALERT", {
 					title: this.translate("title"),
 					message: "<span style='font-size:" + this.config.NumberFontSize + "'>" + payload + "<span>",
 					imageFA: "phone"
 				});
+				
+				//Set active Alert to current call
+				this.activeAlert = payload
+		}
+			if (notification === "connected"){
+				//Send notification for currentCall module
+				this.sendNotification("CALL_CONNECTED", payload);
+				
+				//Remove alert only on connect if it is the current alert shown
+				if (this.activeAlert === payload){
+					//Remove alert from UI when call is connected
+					this.sendNotification("HIDE_ALERT");
+					this.activeAlert = null
+				}
 			}
-			if (payload == "clear"){
-				//Remove alert from UI
-				this.sendNotification("HIDE_ALERT");
+			if (notification === "disconnected"){
+				//Send notification for currentCall module
+				this.sendNotification("CALL_DISCONNECTED", payload.caller);
+				
+				//Add call to call_history (timestamp and caller) or if minimumCallLength is set only missed calls
+				if (payload.duration <= this.config.minimumCallLength){
+					this.call_history.push({"time": moment(), "caller": payload.caller})	
+				}
 				//Update call list on UI
 				this.updateDom(3000);
+				
+				//Remove alert only on disconnect if it is the current alert shown
+				if (this.activeAlert === payload.caller){
+					//Remove alert from UI when call is connected
+					this.sendNotification("HIDE_ALERT");
+					this.activeAlert = null
+				}
 			}
 			
-		}
+		
 	},
 	
 	start: function() {
 		//Create call_history array
 		this.call_history = []
+		this.activeAlert = null
 		//Set helper variable this so it is available in the timer
 		var self = this;
 		//Update doom every minute so that the time of the call updates and calls get removed after a certain time
@@ -75,14 +100,14 @@ Module.register("MMM-FRITZ-Box-Callmonitor",{
 	getDom: function() {
 		//For each call in call_history
 		for (var i = 0; i < this.call_history.length; i++) {
-			//Check if call is older than maximumEntrieDistance
-			if ( moment(moment()).diff(moment(this.call_history[i].time)) > this.config.maximumEntrieDistance * 60000 ){
+			//Check if call is older than maximumCallDistance
+			if ( moment(moment()).diff(moment(this.call_history[i].time)) > this.config.maximumCallDistance * 60000 ){
 				//is older -> remove from list
 				this.call_history.splice(i, 1);
 		}
 	}
-		//get latest x calls configured by maximumEntries
-		var calls = this.call_history.slice(this.call_history.length - this.config.maximumEntries, this.call_history.length);
+		//get latest x calls configured by maximumCalls
+		var calls = this.call_history.slice(this.call_history.length - this.config.maximumCalls, this.call_history.length);
 		
 		//Create table
 		var wrapper = document.createElement("table");
