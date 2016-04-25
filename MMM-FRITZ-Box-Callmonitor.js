@@ -11,7 +11,7 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 
 	// Default module config.
 	defaults: {
-		NumberFontSize: 30,
+		numberFontSize: 30,
 		vCard: false,
 		fritzIP: "192.168.178.1",
 		fritzPort: 1012,
@@ -41,7 +41,7 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 			//Show alert on UI
 			this.sendNotification("SHOW_ALERT", {
 				title: this.translate("title"),
-				message: "<span style='font-size:" + this.config.NumberFontSize.toString() + "px'>" + payload + "<span>",
+				message: "<span style='font-size:" + this.config.numberFontSize.toString() + "px'>" + payload + "<span>",
 				imageFA: "phone"
 			});
 
@@ -63,9 +63,9 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 			//Send notification for currentCall module
 			this.sendNotification("CALL_DISCONNECTED", payload.caller);
 
-			//Add call to call_history (timestamp and caller) or if minimumCallLength is set only missed calls
+			//Add call to callHistory (timestamp and caller) or if minimumCallLength is set only missed calls
 			if (payload.duration <= this.config.minimumCallLength) {
-				this.call_history.push({"time": moment(), "caller": payload.caller});
+				this.callHistory.push({"time": moment(), "caller": payload.caller});
 			}
 			//Update call list on UI
 			this.updateDom(3000);
@@ -81,8 +81,8 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 	},
 
 	start: function() {
-		//Create call_history array
-		this.call_history = [];
+		//Create callHistory array
+		this.callHistory = [];
 		this.activeAlert = null;
 		//Set helper variable this so it is available in the timer
 		var self = this;
@@ -97,16 +97,16 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 	},
 
 	getDom: function() {
-		//For each call in call_history
-		for (var i = 0; i < this.call_history.length; i++) {
+		//For each call in callHistory
+		for (var i = 0; i < this.callHistory.length; i++) {
 			//Check if call is older than maximumCallDistance
-			if (moment(moment()).diff(moment(this.call_history[i].time)) > this.config.maximumCallDistance * 60000) {
+			if (moment(moment()).diff(moment(this.callHistory[i].time)) > this.config.maximumCallDistance * 60000) {
 				//is older -> remove from list
-				this.call_history.splice(i, 1);
+				this.callHistory.splice(i, 1);
 			}
 		}
 		//get latest x calls configured by maximumCalls
-		var calls = this.call_history.slice(this.call_history.length - this.config.maximumCalls, this.call_history.length);
+		var calls = this.callHistory.slice(this.callHistory.length - this.config.maximumCalls, this.callHistory.length);
 
 		//Create table
 		var wrapper = document.createElement("table");

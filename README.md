@@ -40,7 +40,7 @@ The following properties can be configured:
 	<thead>
 	<tbody>
 		<tr>
-			<td><code>NumberFontSize</code></td>
+			<td><code>numberFontSize</code></td>
 			<td>Font size of the phone number displayed in the alert.<br>
 				<br><b>Possible values:</b> any <code>int</code> or <code>float</code>
 				<br><b>Default value:</b> <code>30</code>
