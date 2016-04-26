@@ -1,10 +1,10 @@
 {
-  "name": "Magic-Mirror-Module-Callmonitor",
+  "name": "Magic-Mirror-Module-vCard-Addressbook",
   "version": "2.0.0",
-  "description": "A callmonitor module for the Magic Mirror.",
+  "description": "A vCard AddressBook module for the Magic Mirror.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/paviro/MMM-FRITZ-Box-Callmonitor"
+    "url": "git+https://github.com/paviro/MMM-vCard-Addressbook"
   },
   "keywords": [
     "magic mirror",
@@ -13,14 +13,13 @@
     "module"
   ],
   "author": "Paul-Vincent Roll",
-  "contributors": "https://github.com/paviro/MMM-FRITZ-Box-Callmonitor/graphs/contributors",
+  "contributors": "https://github.com/paviro/MMM-vCard-Addressbook/graphs/contributors",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/paviro/MMM-FRITZ-Box-Callmonitor/issues"
+    "url": "https://github.com/paviro/MMM-vCard-Addressbook/issues"
   },
-  "homepage": "https://github.com/paviro/MMM-FRITZ-Box-Callmonitor#readme",
+  "homepage": "https://github.com/paviro/MMM-vCard-Addressbook#readme",
   "dependencies": {
-    "node-fritzbox-callmonitor": "latest",
     "vcard-json": "latest",
     "phone-formatter": "latest"
     }
