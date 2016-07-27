@@ -19,8 +19,11 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 		maximumCallDistance: 60,
 		maximumCalls: 5,
 		fade: true,
-		fadePoint: 0.25
-
+		fadePoint: 0.25,
+		username: "",
+		password: "",
+		loadSpecificPhonebook: "",
+		tr064Port: 49000
 	},
 
 	// Define required translations.
