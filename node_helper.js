@@ -3,11 +3,13 @@
 const NodeHelper = require("node_helper");
 const CallMonitor = require("node-fritzbox-callmonitor");
 const vcard = require("vcard-json");
-const phone = require("phone-formatter");
+const phoneFormatter = require("phone-formatter");
 const tr = require("tr-064");
 const xml2js = require("xml2js");
 const https = require("https");
 const url = require('url');
+const moment = require('moment');
+
 
 const CALL_TYPE = Object.freeze({
 	INCOMING : 1,
@@ -26,12 +28,12 @@ module.exports = NodeHelper.create({
 	},
 
 	normalizePhoneNumber(number) {
-
+		return phoneFormatter.normalize(number.replace(/\s/g, ""));
 	},
 
 	getName: function(number) {
 		//Normalize number
-		var number_formatted = self.normalizePhoneNumber(number);
+		var number_formatted = this.normalizePhoneNumber(number);
 		//Check if number is in AdressBook if yes return the name
 		if (number_formatted in this.AddressBook) {
 			return this.AddressBook[number_formatted];
@@ -54,7 +56,10 @@ module.exports = NodeHelper.create({
 
 				this.parseVcardFile();
 				this.setupMonitor();
-				this.setupApiAccess();
+				if (this.config.password !== "")
+				{
+					this.setupApiAccess();
+				}
 			};
 		}
 	},
@@ -108,9 +113,6 @@ module.exports = NodeHelper.create({
 		});
 	},
 
-// https://192.168.178.1:49443/phonebook.lua?sid=daf3d377ab4c27ad&pbid=0
-// https://192.168.178.1:49443/calllist.lua?sid=daf3d377ab4c27ad
-
 	insecureBoxRequest(self, targetUrl, callback) {
 		// WARNING: use this method ONLY for requests to your fritz.box
 		// it ignores self-signed certificates
@@ -148,20 +150,25 @@ module.exports = NodeHelper.create({
 				return;
 			}
 			var callArray = result.root.Call;
+			var callHistory = []
 			for (var index in callArray)
 			{
 				var call = callArray[index];
 				if (call.Type == CALL_TYPE.MISSED)
 				{
-					console.log(call.Id);
+					var callInfo = {"time": moment(call.Date[0], "DD-MM-YY HH:mm"), "caller": self.getName(call.Caller[0])};
+					if (call.Name[0])
+					{
+						callInfo.caller = call.Name[0];
+					}
+					callHistory.push(callInfo)
 				}
 			}
+			self.sendSocketNotification("call_history", callHistory);
 		});
 	},
 
 	loadPhonebook: function(self, body) {
-		console.log(self.AddressBook);
-
 		xml2js.parseString(body, function (err, result) {
 			if (err) {
 				console.error(self.name + " error while parsing phonebook: " + err);
@@ -176,12 +183,10 @@ module.exports = NodeHelper.create({
 				var contactNumbers = contact.telephony[0].number;
 				var contactName = contact.person[0].realName;
 
-				console.log(self.AddressBook);
 				for (var index in contactNumbers)
 				{
-					var currentNumber = contactNumbers[index]._;
-					console.log(currentNumber + " -> " + contactName);
-					self.AddressBook[self.normalizePhoneNumber(currentNumber)] = contactName;
+					var currentNumber = self.normalizePhoneNumber(contactNumbers[index]._);
+					self.AddressBook[currentNumber] = contactName;
 				}
 			}
 		});
@@ -201,8 +206,14 @@ module.exports = NodeHelper.create({
 					console.error(self.name + " error: " + err);
 					return;
 				}
-				sslDev.login(self.config.username, self.config.password);
-				console.log(self.name + " login");
+				if (self.config.username)
+				{
+					sslDev.login(self.config.username, self.config.password);
+				}
+				else
+				{
+					sslDev.login(self.config.password);
+				}
 				var phoneservice = sslDev.services["urn:dslforum-org:service:X_AVM-DE_OnTel:1"];
 				phoneservice.actions.GetCallList(function (err, result) {
 					if (err) {

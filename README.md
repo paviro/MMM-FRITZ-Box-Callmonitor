@@ -56,6 +56,23 @@ The following properties can be configured:
 			</td>
 		</tr>
 		<tr>
+			<td><code>username</code></td>
+			<td>Username to access the FritzBox API <br>
+			If entered it directly loads your phonebook and recently missed calls before you started your mirror from the FritzBox. <br>
+			Leave out if you have no username set up (default).<br>
+				<br><b>Possible values:</b> <code>string</code>
+				<br><b>Default value:</b> <code>""</code>
+			</td>
+		</tr>
+		<tr>
+			<td><code>password</code></td>
+			<td>Password to access the FritzBox API. <br> 
+			If entered it directly loads your phonebook and recently missed calls before you started your mirror from the FritzBox.<br>
+				<br><b>Possible values:</b> <code>string</code>
+				<br><b>Default value:</b> <code>""</code>
+			</td>
+		</tr>
+		<tr>
 			<td><code>minimumCallLength</code></td>
 			<td>There is no real way to tell whether a call was missed or not because voice mails count as connected calls. You can however change the time a call has to be for it to be considered not missed. You should probably use a value as long as your voice mail. <br>Default <code>0</code> means any call gets added to the history.<br>
 				<br><b>Possible values:</b> <code>time</code> in <code>seconds</code>
