@@ -58,7 +58,7 @@ The following properties can be configured:
 		<tr>
 			<td><code>username</code></td>
 			<td>Username to access the FritzBox API <br>
-			If entered it directly loads your phonebook and recently missed calls before you started your mirror from the FritzBox. <br>
+			If entered it directly loads your phonebook and recently missed calls from the FritzBox. <br>
 			Leave out if you have no username set up (default).<br>
 				<br><b>Possible values:</b> <code>string</code>
 				<br><b>Default value:</b> <code>""</code>
@@ -67,7 +67,7 @@ The following properties can be configured:
 		<tr>
 			<td><code>password</code></td>
 			<td>Password to access the FritzBox API. <br> 
-			If entered it directly loads your phonebook and recently missed calls before you started your mirror from the FritzBox.<br>
+			If entered it directly loads your phonebook and recently missed calls from the FritzBox.<br>
 				<br><b>Possible values:</b> <code>string</code>
 				<br><b>Default value:</b> <code>""</code>
 			</td>
