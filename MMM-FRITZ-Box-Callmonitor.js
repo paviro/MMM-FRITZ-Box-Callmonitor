@@ -19,8 +19,11 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 		maximumCallDistance: 60,
 		maximumCalls: 5,
 		fade: true,
-		fadePoint: 0.25
-
+		fadePoint: 0.25,
+		username: "",
+		password: "",
+		loadSpecificPhonebook: "",
+		tr064Port: 49000
 	},
 
 	// Define required translations.
@@ -77,7 +80,11 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 				this.activeAlert = null;
 			}
 		}
-
+		if (notification === "call_history") {
+			//Add call to callHistory (timestamp and caller) or if minimumCallLength is set only missed calls
+			this.callHistory = this.callHistory.concat(payload);
+			this.updateDom(3000);
+		}
 	},
 
 	start: function() {
@@ -103,6 +110,7 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 			if (moment(moment()).diff(moment(this.callHistory[i].time)) > this.config.maximumCallDistance * 60000) {
 				//is older -> remove from list
 				this.callHistory.splice(i, 1);
+				i--;
 			}
 		}
 		//get latest x calls configured by maximumCalls

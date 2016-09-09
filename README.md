@@ -24,6 +24,15 @@ modules: [
 ]
 ````
 
+### Loading your contacts
+
+There are currently two different ways to get this module to displays the name of the caller, rather than the number.
+
+1. Load a .vcf file, for example exported contacts from your phone (see `vCard` option)
+2. Access your FRITZ!Box contacts via the TR-064 API (see `password` and `username` option)
+
+The latter will also load recently missed calls, which happened before you started your mirror.
+
 ### MMM-Callmonitor-Current-Call
 If you are interested in having a list with all active calls as well, check out [MMM-Callmonitor-Current-Call](https://github.com/paviro/MMM-Callmonitor-Current-Call). 
 
@@ -53,6 +62,25 @@ The following properties can be configured:
 			<td>Absolute path to a .vcf file for number to name conversion.<br>
 				<br><b>Possible values:</b> <code>string</code>
 				<br><b>Default value:</b> <code>false</code>
+			</td>
+		</tr>
+		<tr>
+			<td><code>password</code></td>
+			<td>Password to access the FritzBox API. (<b>optional</b>) <br> 
+			If you enter this, it directly loads your phonebook(s) and recently missed calls from the FritzBox.<br>
+			If you have specified a username for your access to the FritzBox, see below. <br>
+			You can also create a different user from the one you use for accessing the FritzBox (see this <a href="https://en.avm.de/service/fritzbox/fritzbox-7390/knowledge-base/publication/show/1522_Setting-up-user-accounts-in-the-FRITZ-Box/">guide</a>). It will need rights to access "FRITZ!Box Settings". <br>
+				<br><b>Possible values:</b> <code>string</code>
+				<br><b>Default value:</b> <code>""</code>
+			</td>
+		</tr>
+		<tr>
+			<td><code>username</code></td>
+			<td>Username to access the FritzBox API. (<b>optional</b>)<br>
+			Specify the username if you have one set up for the FritzBox access (see password option). <br>
+			Leave out if you have no username (default).<br>
+				<br><b>Possible values:</b> <code>string</code>
+				<br><b>Default value:</b> <code>""</code>
 			</td>
 		</tr>
 		<tr>
