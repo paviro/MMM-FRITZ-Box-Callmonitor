@@ -24,6 +24,15 @@ modules: [
 ]
 ````
 
+### Loading your contacts
+
+There are currently two different ways to get this module to displays the name of the caller, rather than the number.
+
+1. Load a .vcf file, for example exported contacts from your phone (see `vCard` option)
+2. Access your FRITZ!Box contacts via the TR-064 API (see `password` and `username` option)
+
+The latter will also load recently missed calls, which happened before you started your mirror.
+
 ### MMM-Callmonitor-Current-Call
 If you are interested in having a list with all active calls as well, check out [MMM-Callmonitor-Current-Call](https://github.com/paviro/MMM-Callmonitor-Current-Call). 
 
