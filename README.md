@@ -56,18 +56,20 @@ The following properties can be configured:
 			</td>
 		</tr>
 		<tr>
-			<td><code>username</code></td>
-			<td>Username to access the FritzBox API <br>
-			If entered it directly loads your phonebook and recently missed calls from the FritzBox. <br>
-			Leave out if you have no username set up (default).<br>
+			<td><code>password</code></td>
+			<td>Password to access the FritzBox API. (<b>optional</b>) <br> 
+			If you enter this, it directly loads your phonebook(s) and recently missed calls from the FritzBox.<br>
+			If you have specified a username for your access to the FritzBox, see below. <br>
+			You can also create a different user from the one you use for accessing the FritzBox (see this <a href="https://en.avm.de/service/fritzbox/fritzbox-7390/knowledge-base/publication/show/1522_Setting-up-user-accounts-in-the-FRITZ-Box/">guide</a>). It will need rights to access "FRITZ!Box Settings". <br>
 				<br><b>Possible values:</b> <code>string</code>
 				<br><b>Default value:</b> <code>""</code>
 			</td>
 		</tr>
 		<tr>
-			<td><code>password</code></td>
-			<td>Password to access the FritzBox API. <br> 
-			If entered it directly loads your phonebook and recently missed calls from the FritzBox.<br>
+			<td><code>username</code></td>
+			<td>Username to access the FritzBox API. (<b>optional</b>)<br>
+			Specify the username if you have one set up for the FritzBox access (see password option). <br>
+			Leave out if you have no username (default).<br>
 				<br><b>Possible values:</b> <code>string</code>
 				<br><b>Default value:</b> <code>""</code>
 			</td>
