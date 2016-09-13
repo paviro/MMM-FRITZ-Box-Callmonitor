@@ -139,6 +139,8 @@ The following properties can be configured:
 - [node-fritzbox-callmonitor](https://www.npmjs.com/package/node-fritzbox-callmonitor) (installed by `npm install`)
 - [vcard-json](https://www.npmjs.com/package/vcard-json) (installed by `npm install`)
 - [phone-formatter](https://www.npmjs.com/package/phone-formatter) (installed by `npm install`)
+- [xml2js](https://www.npmjs.com/package/xml2js): (installed by `npm install`)
+- [tr-064](https://www.npmjs.com/package/tr-064): (installed by `npm install`)
 
 The MIT License (MIT)
 =====================
