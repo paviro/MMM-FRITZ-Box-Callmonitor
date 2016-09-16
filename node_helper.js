@@ -93,12 +93,14 @@ module.exports = NodeHelper.create({
 	},
 
 	parseVcardFile: function() {
-		if (!this.config.vCard) {
+        var self = this;
+
+		if (!self.config.vCard) {
 			return;
 		}
-		vcard.parseVcardFile(this.config.vCard, function(err, data) {
+		vcard.parseVcardFile(self.config.vCard, function(err, data) {
 			//In case there is an error reading the vcard file
-			if (err) console.log("[" + this.name + "] " + err);
+			if (err) console.log("[" + self.name + "] " + err);
 			//success
 			else {
 				//For each contact in vcf file
