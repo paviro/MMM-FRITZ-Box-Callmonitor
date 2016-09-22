@@ -191,34 +191,25 @@ module.exports = NodeHelper.create({
 		exec("python " + options.join(" "), {cwd: PARENT_DIR}, function (error, stdout, stderr) {
 			if (error) {
 				self.sendSocketNotification("contacts_loaded", -1);
-				console.error(self.name + " error while accessing FRITZ!Box: " + stderr);
+				console.error(self.name + " error while accessing FRITZ!Box: " + stderr + "\n" + stdout);
 				throw error;
 			}
-			var phonebooks = stdout.split("\n");
-			for (var i = 0; i < phonebooks.length; i++)
+			var files = stdout.split("\n");
+			console.log(files.length);
+			for (var i = 0; i + 1 < files.length; i += 2)
 			{
-				if (phonebooks[i] === "")
+				var filename = files[i];
+				var content = files[i + 1];
+
+				if (filename.indexOf("calls") !== -1)
 				{
-					continue;
+					// call list file
+					self.loadCallList(content);
+				} else {
+					// phone book file
+					self.loadPhonebook(content);
 				}
-				var filename = process.cwd() + "/" + PARENT_DIR + phonebooks[i];
-				fs.readFile(filename, function(err, data) {
-					if (err) {
-						console.error(self.name + " error while reading phonebook: " + err);
-						self.sendSocketNotification("contacts_loaded", -1);
-					}
-					self.loadPhonebook(data);
-				});
 			}
-			filename = process.cwd() + "/" + PARENT_DIR + "data/calls.xml";
-			fs.readFile(filename, function(err, data) {
-				if (err)
-				{
-					console.error(self.name + " error while reading call list: " + err);
-					self.sendSocketNotification("contacts_loaded", -1);
-				}
-				self.loadCallList(data);
-			});
 		});
 	}
 });

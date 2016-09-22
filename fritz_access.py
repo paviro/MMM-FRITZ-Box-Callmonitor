@@ -12,28 +12,28 @@ class FritzAccess(object):
     def download_recent_calls(self, directory):
         result = self.fc.call_action("X_AVM-DE_OnTel", "GetCallList")
         filename = os.path.join(directory, "calls.xml")
-        self.download_file(result["NewCallListURL"], filename)
+        self.forward_file(result["NewCallListURL"], filename)
 
     def download_phone_book(self, directory):
         result = self.fc.call_action("X_AVM-DE_OnTel", "GetPhonebookList")
         for phonebook_id in result["NewPhonebookList"]:
             result_phonebook = self.fc.call_action("X_AVM-DE_OnTel", "GetPhonebook", NewPhonebookID=phonebook_id)
             filename = os.path.join(directory, "pbook_%s.xml" % phonebook_id)
-            print filename
-            self.download_file(result_phonebook["NewPhonebookURL"], filename)
+            self.forward_file(result_phonebook["NewPhonebookURL"], filename)
 
-    def download_file(self, url, filename):
+    def forward_file(self, url, filename):
         try:
             f = urllib2.urlopen(url)
-            with open(filename, "wb") as local_file:
-                local_file.write(f.read())
-                os.fsync(local_file)
-                return 
+            content = f.read()
+            # replace newline with space, it will be our separator
+            content = content.replace("\n", " ")
+            print filename
+            print content
         except urllib2.HTTPError, e:
-            print "HTTP Error:", e.code, url
+            print "Error (HTTP)", e.code, url
             sys.exit(1)
         except urllib2.URLError, e:
-            print "URL Error:", e.reason, url
+            print "Error (URL)", e.reason, url
             sys.exit(1)
 
 
