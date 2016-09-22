@@ -6,7 +6,6 @@ const vcard = require("vcard-json");
 const phoneFormatter = require("phone-formatter");
 const xml2js = require("xml2js");
 const moment = require('moment');
-const fs = require('fs');
 const exec = require('child_process').exec;
 
 const CALL_TYPE = Object.freeze({
