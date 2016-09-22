@@ -22,8 +22,7 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 		fadePoint: 0.25,
 		username: "",
 		password: "",
-		loadSpecificPhonebook: "",
-		tr064Port: 49000
+		showContactsStatus: false
 	},
 
 	// Define required translations.
@@ -36,6 +35,30 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 
 	getScripts: function() {
 		return ["moment.js"];
+	},
+
+	getStyles: function() {
+		return ["font-awesome.css"];
+	},
+
+	start: function() {
+		//Create callHistory array
+		this.callHistory = [];
+		this.activeAlert = null;
+		//Set helper variable this so it is available in the timer
+		var self = this;
+		//Update doom every minute so that the time of the call updates and calls get removed after a certain time
+		setInterval(function() {
+			self.updateDom();
+		}, 60000);
+
+		this.contactsLoaded = false;
+		this.numberOfContacts = 0;
+		this.contactLoadError = false;
+
+		//Send config to the node helper
+		this.sendSocketNotification("CONFIG", this.config);
+		Log.info("Starting module: " + this.name);
 	},
 
 	// Override socket notification handler.
@@ -68,7 +91,7 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 
 			//Add call to callHistory (timestamp and caller) or if minimumCallLength is set only missed calls
 			if (payload.duration <= this.config.minimumCallLength) {
-				this.callHistory.push({"time": moment(), "caller": payload.caller});
+				this.callHistory.unshift({"time": moment(), "caller": payload.caller});
 			}
 			//Update call list on UI
 			this.updateDom(3000);
@@ -83,24 +106,21 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 		if (notification === "call_history") {
 			//Add call to callHistory (timestamp and caller) or if minimumCallLength is set only missed calls
 			this.callHistory = this.callHistory.concat(payload);
-			this.updateDom(3000);
+			if (payload.length > 0)
+			{
+				this.updateDom(3000);
+			}
 		}
-	},
-
-	start: function() {
-		//Create callHistory array
-		this.callHistory = [];
-		this.activeAlert = null;
-		//Set helper variable this so it is available in the timer
-		var self = this;
-		//Update doom every minute so that the time of the call updates and calls get removed after a certain time
-		setInterval(function() {
-			self.updateDom();
-		}, 60000);
-
-		//Send config to the node helper
-		this.sendSocketNotification("CONFIG", this.config);
-		Log.info("Starting module: " + this.name);
+		if (notification === "contacts_loaded") {
+			this.contactsLoaded = true;
+			if (payload === -1) {
+				this.contactLoadError = true;
+				this.updateDom();
+				return;
+			}
+			this.numberOfContacts += payload;
+			this.updateDom();
+		}
 	},
 
 	getDom: function() {
@@ -123,7 +143,26 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 
 		//If there are no calls, set "noCall" text.
 		if (calls.length === 0) {
-			wrapper.innerHTML = this.translate("noCall");
+			content = this.translate("noCall");
+			if (this.config.showContactsStatus && (this.config.vCard || this.config.password !== ""))
+			{
+				content += " (<span class='small fa fa-book'/></span>";
+
+				if (this.contactsLoaded)
+				{
+					content += " " + this.numberOfContacts;
+				}
+				else
+				{
+					content += " <span class='small fa fa-refresh fa-spin fa-fw'></span>";
+				}
+				if (this.contactLoadError)
+				{
+					content += " <span class='small fa fa-exclamation-triangle'/></span>";
+				}
+				content += ")";
+			}
+			wrapper.innerHTML = content;
 			wrapper.className = "xsmall dimmed";
 			return wrapper;
 		}

@@ -6,7 +6,8 @@ This an extension for the [MagicMirror](https://github.com/MichMich/MagicMirror)
 ## Installation
 1. Navigate into your MagicMirror's `modules` folder and execute `git clone https://github.com/paviro/MMM-FRITZ-Box-Callmonitor.git`. A new folder will appear navigate into it.
 2. Execute `npm install` to install the dependencies.
-3. Activate the callmonitor of your FRITZ!Box by calling `#96*5*` on a connected phone.
+3. (Optional) Execute `sudo apt-get install python-dev libxml2-dev libxslt1-dev zlib1g-dev && sudo pip install fritzconnection` to allow access to your FRITZ!Box phone book and recent calls. This can take a few minutes.
+4. Activate the callmonitor of your FRITZ!Box by calling `#96*5*` on a connected phone.
 
 ## Using the module
 
@@ -84,6 +85,15 @@ The following properties can be configured:
 			</td>
 		</tr>
 		<tr>
+			<td><code>showContactsStatus</code></td>
+			<td>If no recent calls are displayed, a small symbol shows how many contacts are loaded in your phonebook. <br>
+			A small warning sign appears if any error occurs when importing contacts from vCard or the FRITZ!Box.
+			<br>
+				<br><b>Possible values:</b> <code>true</code> or <code>false</code>
+				<br><b>Default value:</b> <code>false</code>
+			</td>
+		</tr>
+		<tr>
 			<td><code>minimumCallLength</code></td>
 			<td>There is no real way to tell whether a call was missed or not because voice mails count as connected calls. You can however change the time a call has to be for it to be considered not missed. You should probably use a value as long as your voice mail. <br>Default <code>0</code> means any call gets added to the history.<br>
 				<br><b>Possible values:</b> <code>time</code> in <code>seconds</code>
@@ -140,7 +150,7 @@ The following properties can be configured:
 - [vcard-json](https://www.npmjs.com/package/vcard-json) (installed by `npm install`)
 - [phone-formatter](https://www.npmjs.com/package/phone-formatter) (installed by `npm install`)
 - [xml2js](https://www.npmjs.com/package/xml2js): (installed by `npm install`)
-- [tr-064](https://www.npmjs.com/package/tr-064): (installed by `npm install`)
+- [fritzconnection](https://pypi.python.org/pypi/fritzconnection): (installed by `sudo apt-get install python-dev libxml2-dev libxslt1-dev zlib1g-dev && sudo pip install fritzconnection`)
 
 The MIT License (MIT)
 =====================
