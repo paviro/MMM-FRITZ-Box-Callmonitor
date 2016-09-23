@@ -23,7 +23,6 @@
     "node-fritzbox-callmonitor": "latest",
     "vcard-json": "latest",
     "phone-formatter": "latest",
-    "xml2js": "latest",
-    "tr-064": "latest"
+    "xml2js": "latest"
     }
 }
