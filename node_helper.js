@@ -9,9 +9,9 @@ const moment = require('moment');
 const exec = require('child_process').exec;
 
 const CALL_TYPE = Object.freeze({
-	INCOMING : 1,
-	MISSED : 2,
-	OUTGOING : 3
+	INCOMING : "1",
+	MISSED : "2",
+	OUTGOING : "3"
 })
 // outgoing missed calls are not in the list
 
@@ -132,12 +132,18 @@ module.exports = NodeHelper.create({
 			}
 			var callArray = result.root.Call;
 			var callHistory = []
+
 			for (var index in callArray)
 			{
 				var call = callArray[index];
-				if (call.Type == CALL_TYPE.MISSED)
+				var type = call.Type[0];
+				if (type == CALL_TYPE.MISSED || type == CALL_TYPE.INCOMING)
 				{
-					var callInfo = {"time": moment(call.Date[0], "DD-MM-YY HH:mm"), "caller": self.getName(call.Caller[0])};
+					if (type == CALL_TYPE.INCOMING && self.config.deviceFilter && self.config.deviceFilter.indexOf(call.Device[0]) > -1) {
+						console.log("Filtered " + call.Name[0] + " " + call.Date[0]);
+						continue;
+					}
+					var callInfo = {"time": moment(call.Date[0], "DD.MM.YY HH:mm"), "caller": self.getName(call.Caller[0])};
 					if (call.Name[0])
 					{
 						callInfo.caller = call.Name[0];

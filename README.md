@@ -28,9 +28,10 @@ modules: [
 ### Loading your contacts
 
 There are currently two different ways to get this module to displays the name of the caller, rather than the number.
+They are both optional, and you can combine them.
 
-1. Load a .vcf file, for example exported contacts from your phone (see options marked with **VCF**)
-2. Access your FRITZ!Box contacts via the TR-064 API (see options marked with **API**)
+1. Load a .vcf file, for example exported contacts from your phone (see [options](#configuration-options) marked with **VCF**)
+2. Access your FRITZ!Box contacts via the TR-064 API (see [options](#configuration-options) marked with **API**)
 
 The latter will also load recently missed calls, which happened before you started your mirror.
 
@@ -69,8 +70,8 @@ The following properties can be configured:
 		</tr>
 		<tr>
 			<td><code>minimumCallLength</code></td>
-			<td>VCF</td>
-			<td>There is no real way to tell whether a call was missed or not because voice mails count as connected calls. You can however change the time a call has to be for it to be considered not missed. You should probably use a value as long as your voice mail. Note: this is not needed if you are using the API access. <br>Default <code>0</code> means any call gets added to the history.<br>
+			<td>any</td>
+			<td>There is no real way to tell whether a call was missed or not because voice mails count as connected calls. You can however change the time a call has to be for it to be considered not missed. You should probably use a value as long as your voice mail. <br>Default <code>0</code> means any call gets added to the history.<br> If you enter a time larger than `0`, any call that is longer than that time, is not added to the list.<br>
 				<br><b>Possible values:</b> <code>time</code> in <code>seconds</code>
 				<br><b>Default value:</b> <code>0</code>
 			</td>
@@ -104,6 +105,15 @@ The following properties can be configured:
 			<br>
 				<br><b>Possible values:</b> <code>time</code> in <code>minutes</code>
 				<br><b>Default value:</b> <code>30</code>
+			</td>
+		</tr>
+		<tr>
+			<td><code>showAllCalls</code></td>
+			<td>API</td>
+			<td>Show all calls (`true`) or only missed calls (`false`)?
+			<br>
+				<br><b>Possible values:</b> <code>true</code> or <code>false</code>
+				<br><b>Default value:</b> <code>true</code>
 			</td>
 		</tr>
 		<tr>

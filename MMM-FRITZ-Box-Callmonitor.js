@@ -23,6 +23,7 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 		username: "",
 		password: "",
 		reloadContactsInterval: 30, // 30 minutes, set to 0 to disable
+		deviceFilter: [], // [] means no filtering
 		showContactsStatus: false
 	},
 
@@ -104,7 +105,7 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 				this.sendSocketNotification("RELOAD_CALLS");
 			} else {
 				//Add call to callHistory (timestamp and caller) or if minimumCallLength is set only missed calls
-				if (payload.duration <= this.config.minimumCallLength) {
+				if (this.config.minimumCallLength === 0 || payload.duration <= this.config.minimumCallLength) {
 					this.callHistory.unshift({"time": moment(), "caller": payload.caller});
 				}
 				//Update call list on UI
@@ -121,8 +122,6 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 		if (notification === "call_history") {
 			//update call history from API
 			this.callHistory = payload;
-			this.sortHistory();
-			this.trimHistory();
 
 			this.updateDom(3000);
 		}
@@ -162,9 +161,10 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 		//For each call in callHistory
 		for (var i = 0; i < history.length; i++) {
 			//Check if call is older than maximumCallDistance
+			console.log(moment(history[i].time));
 			if (moment(moment()).diff(moment(history[i].time)) > this.config.maximumCallDistance * 60000) {
 				//is older -> remove from list
-				history.splice(i, i + 1);
+				history.splice(i, 1);
 				i--;
 			}
 		}
@@ -174,6 +174,7 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 
 	getDom: function() {
 		//remove old calls
+		this.sortHistory();
 		this.trimHistory();
 
 		//get maximum number of calls from call history
