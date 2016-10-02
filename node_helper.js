@@ -104,7 +104,7 @@ module.exports = NodeHelper.create({
 		vcard.parseVcardFile(self.config.vCard, function(err, data) {
 			//In case there is an error reading the vcard file
 			if (err) {
-				self.sendSocketNotification("contacts_loaded", -1);
+				self.sendSocketNotification("error", "vcf_parse_error");
 				console.log("[" + self.name + "] " + err);
 				return
 			}
