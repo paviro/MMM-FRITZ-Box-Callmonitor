@@ -161,7 +161,6 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 		//For each call in callHistory
 		for (var i = 0; i < history.length; i++) {
 			//Check if call is older than maximumCallDistance
-			console.log(moment(history[i].time));
 			if (moment(moment()).diff(moment(history[i].time)) > this.config.maximumCallDistance * 60000) {
 				//is older -> remove from list
 				history.splice(i, 1);
