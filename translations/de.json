@@ -1,4 +1,11 @@
 {
   "title": "Eingehender Anruf",
-  "noCall": "Keine kürzlichen Anrufe."
+  "noCall": "Keine kürzlichen Anrufe.",  
+
+  // keep the error messages short
+  "calllist_parse_error": "Anrufliste unlesbar.",
+  "phonebook_parse_error": "Telefonbuch unlesbar.",
+  "login_error": "Logindaten falsch?",
+  "network_error": "FRITZ!Box nicht erreichbar.",
+  "unknown_error": "Unbekannter Fehler."
 }

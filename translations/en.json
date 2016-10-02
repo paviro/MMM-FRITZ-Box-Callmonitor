@@ -1,4 +1,11 @@
 {
   "title": "Incoming Call",
-  "noCall": "No recent calls."
+  "noCall": "No recent calls.",
+
+  // keep the error messages short
+  "calllist_parse_error": "Can't parse calllist.",
+  "phonebook_parse_error": "Can't parse phonebook.",
+  "login_error": "Login data wrong?",
+  "network_error": "Could not reach FRITZ!Box.",
+  "unknown_error": "Unknown error."
 }

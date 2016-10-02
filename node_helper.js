@@ -59,6 +59,12 @@ module.exports = NodeHelper.create({
 				}
 			};
 		}
+		if (notification === "RELOAD_CALLS") {
+			this.loadDataFromAPI("--calls-only");
+		}
+		if (notification === "RELOAD_CONTACTS") {
+			this.loadDataFromAPI("--contacts-only");
+		}
 	},
 
 	setupMonitor: function() {
@@ -111,7 +117,7 @@ module.exports = NodeHelper.create({
 					self.AddressBook[self.normalizePhoneNumber(data[i].phone[a].value)] = data[i].fullname;
 				}
 			}
-			self.sendSocketNotification("contacts_loaded", data.length);
+			self.sendSocketNotification("contacts_loaded", Object.keys(self.AddressBook).length);
 		});
 	},
 
@@ -120,7 +126,7 @@ module.exports = NodeHelper.create({
 
 		xml2js.parseString(body, function (err, result) {
 			if (err) {
-				self.sendSocketNotification("contacts_loaded", -1);
+				self.sendSocketNotification("error", "calllist_parse_error");
 				console.error(self.name + " error while parsing call list: " + err);
 				return;
 			}
@@ -148,7 +154,7 @@ module.exports = NodeHelper.create({
 
 		xml2js.parseString(body, function (err, result) {
 			if (err) {
-				self.sendSocketNotification("contacts_loaded", -1);
+				self.sendSocketNotification("error", "phonebook_parse_error");
 				console.error(self.name + " error while parsing phonebook: " + err);
 				return;
 			}
@@ -167,16 +173,16 @@ module.exports = NodeHelper.create({
 					self.AddressBook[currentNumber] = contactName[0];
 				}
 			}
-			self.sendSocketNotification("contacts_loaded", contactsArray.length);
+			self.sendSocketNotification("contacts_loaded", Object.keys(self.AddressBook).length);
 		});
 	},
 
-	loadDataFromAPI: function() {
+	loadDataFromAPI: function(additionalOption) {
 		const PARENT_DIR = 'modules/MMM-FRITZ-Box-Callmonitor/';
 
 		var self = this;
 
-		var options = ['fritz_access.py', '-d', 'data']
+		var options = ['fritz_access.py', '-i', self.config.fritzIP]
 		if (self.config.password !== "")
 		{
 			options.push('-p');
@@ -187,14 +193,32 @@ module.exports = NodeHelper.create({
 			options.push('-u');
 			options.push(self.config.username);
 		}
+		if (additionalOption)
+		{
+			options.push(additionalOption);
+		}
 		exec("python " + options.join(" "), {cwd: PARENT_DIR}, function (error, stdout, stderr) {
 			if (error) {
-				self.sendSocketNotification("contacts_loaded", -1);
-				console.error(self.name + " error while accessing FRITZ!Box: " + stderr + "\n" + stdout);
-				throw error;
+				var errorUnknown = true;
+				if (stderr.indexOf("XMLSyntaxError") !== -1) {
+					// password is probably wrong
+					self.sendSocketNotification("error", "login_error");
+					errorUnknown = false;
+				}
+				if (stderr.indexOf("failed to load external entity") !== -1) {
+					// probably no network connection
+					self.sendSocketNotification("error", "network_error");
+					errorUnknown = false;
+				}
+				if (errorUnknown) {
+					self.sendSocketNotification("error", "unknown_error");
+				}
+				console.error(self.name + " error while accessing FRITZ!Box: ");
+				console.error(stderr);
+				console.log(stdout);
+				return;
 			}
 			var files = stdout.split("\n");
-			console.log(files.length);
 			for (var i = 0; i + 1 < files.length; i += 2)
 			{
 				var filename = files[i];

@@ -29,8 +29,8 @@ modules: [
 
 There are currently two different ways to get this module to displays the name of the caller, rather than the number.
 
-1. Load a .vcf file, for example exported contacts from your phone (see `vCard` option)
-2. Access your FRITZ!Box contacts via the TR-064 API (see `password` and `username` option)
+1. Load a .vcf file, for example exported contacts from your phone (see options marked with **VCF**)
+2. Access your FRITZ!Box contacts via the TR-064 API (see options marked with **API**)
 
 The latter will also load recently missed calls, which happened before you started your mirror.
 
@@ -41,18 +41,19 @@ If you are interested in having a list with all active calls as well, check out 
 
 The following properties can be configured:
 
-
 <table width="100%">
 	<!-- why, markdown... -->
 	<thead>
 		<tr>
 			<th>Option</th>
+			<th>Method</th>
 			<th width="100%">Description</th>
 		</tr>
 	<thead>
 	<tbody>
 		<tr>
 			<td><code>numberFontSize</code></td>
+			<td>any</td>
 			<td>Font size of the phone number displayed in the alert.<br>
 				<br><b>Possible values:</b> any <code>int</code> or <code>float</code>
 				<br><b>Default value:</b> <code>30</code>
@@ -60,6 +61,7 @@ The following properties can be configured:
 		</tr>
 		<tr>
 			<td><code>vCard</code></td>
+			<td>VCF</td>
 			<td>Absolute path to a .vcf file for number to name conversion.<br>
 				<br><b>Possible values:</b> <code>string</code>
 				<br><b>Default value:</b> <code>false</code>
@@ -67,6 +69,7 @@ The following properties can be configured:
 		</tr>
 		<tr>
 			<td><code>password</code></td>
+			<td>API</td>
 			<td>Password to access the FritzBox API. (<b>optional</b>) <br> 
 			If you enter this, it directly loads your phonebook(s) and recently missed calls from the FritzBox.<br>
 			If you have specified a username for your access to the FritzBox, see below. <br>
@@ -77,6 +80,7 @@ The following properties can be configured:
 		</tr>
 		<tr>
 			<td><code>username</code></td>
+			<td>API</td>
 			<td>Username to access the FritzBox API. (<b>optional</b>)<br>
 			Specify the username if you have one set up for the FritzBox access (see password option). <br>
 			Leave out if you have no username (default).<br>
@@ -85,7 +89,18 @@ The following properties can be configured:
 			</td>
 		</tr>
 		<tr>
+			<td><code>reloadContactsInterval</code></td>
+			<td>API</td>
+			<td>How often contacts are reloaded from the FRITZ!Box.<br>
+			Set to 0 to disable reloading contacts, they are only loaded once after the start of the mirror.
+			<br>
+				<br><b>Possible values:</b> <code>time</code> in <code>minutes</code>
+				<br><b>Default value:</b> <code>30</code>
+			</td>
+		</tr>
+		<tr>
 			<td><code>showContactsStatus</code></td>
+			<td>any</td>
 			<td>If no recent calls are displayed, a small symbol shows how many contacts are loaded in your phonebook. <br>
 			A small warning sign appears if any error occurs when importing contacts from vCard or the FRITZ!Box.
 			<br>
@@ -95,13 +110,15 @@ The following properties can be configured:
 		</tr>
 		<tr>
 			<td><code>minimumCallLength</code></td>
-			<td>There is no real way to tell whether a call was missed or not because voice mails count as connected calls. You can however change the time a call has to be for it to be considered not missed. You should probably use a value as long as your voice mail. <br>Default <code>0</code> means any call gets added to the history.<br>
+			<td>VCF</td>
+			<td>There is no real way to tell whether a call was missed or not because voice mails count as connected calls. You can however change the time a call has to be for it to be considered not missed. You should probably use a value as long as your voice mail. Note: this is not needed if you are using the API access. <br>Default <code>0</code> means any call gets added to the history.<br>
 				<br><b>Possible values:</b> <code>time</code> in <code>seconds</code>
 				<br><b>Default value:</b> <code>0</code>
 			</td>
 		</tr>
 		<tr>
 			<td><code>maximumCallDistance</code></td>
+			<td>any</td>
 			<td>Time after which calls get removed from the list.<br>
 				<br><b>Possible values:</b> <code>time</code> in <code>min</code>
 				<br><b>Default value:</b> <code>60</code>
@@ -109,6 +126,7 @@ The following properties can be configured:
 		</tr>
 		<tr>
 			<td><code>maximumCalls</code></td>
+			<td>any</td>
 			<td>Maximum number of calls to be shown in the list.<br>
 				<br><b>Possible values:</b> any <code>int</code>
 				<br><b>Default value:</b> <code>5</code>
@@ -116,6 +134,7 @@ The following properties can be configured:
 		</tr>
 		<tr>
 			<td><code>fritzIP</code></td>
+			<td>any</td>
 			<td>IP Adress of your FRITZ!Box.<br>
 				<br><b>Possible values:</b> IP Address
 				<br><b>Default value:</b> <code>192.168.178.1</code>
@@ -123,6 +142,7 @@ The following properties can be configured:
 		</tr>
 		<tr>
 			<td><code>fritzPort</code></td>
+			<td>any</td>
 			<td>Port of your FRITZ!Box callmonitor (you should not have to change that)<br>
 				<br><b>Possible values:</b> any <code>int</code>
 				<br><b>Default value:</b> <code>1012</code>
@@ -130,6 +150,7 @@ The following properties can be configured:
 		</tr>
 		<tr>
 			<td><code>fade</code></td>
+			<td>any</td>
 			<td>Fade old calls to black. (Gradient)<br>
 				<br><b>Possible values:</b> <code>true</code> or <code>false</code>
 				<br><b>Default value:</b> <code>true</code>
@@ -137,6 +158,7 @@ The following properties can be configured:
 		</tr>
 		<tr>
 			<td><code>fadePoint</code></td>
+			<td>any</td>
 			<td>Where to start fade?<br>
 				<br><b>Possible values:</b> <code>0</code> (top of the list) - <code>1</code> (bottom of list)
 				<br><b>Default value:</b> <code>0.25</code>
