@@ -68,6 +68,14 @@ The following properties can be configured:
 			</td>
 		</tr>
 		<tr>
+			<td><code>minimumCallLength</code></td>
+			<td>VCF</td>
+			<td>There is no real way to tell whether a call was missed or not because voice mails count as connected calls. You can however change the time a call has to be for it to be considered not missed. You should probably use a value as long as your voice mail. Note: this is not needed if you are using the API access. <br>Default <code>0</code> means any call gets added to the history.<br>
+				<br><b>Possible values:</b> <code>time</code> in <code>seconds</code>
+				<br><b>Default value:</b> <code>0</code>
+			</td>
+		</tr>
+		<tr>
 			<td><code>password</code></td>
 			<td>API</td>
 			<td>Password to access the FritzBox API. (<b>optional</b>) <br> 
@@ -106,14 +114,6 @@ The following properties can be configured:
 			<br>
 				<br><b>Possible values:</b> <code>true</code> or <code>false</code>
 				<br><b>Default value:</b> <code>false</code>
-			</td>
-		</tr>
-		<tr>
-			<td><code>minimumCallLength</code></td>
-			<td>VCF</td>
-			<td>There is no real way to tell whether a call was missed or not because voice mails count as connected calls. You can however change the time a call has to be for it to be considered not missed. You should probably use a value as long as your voice mail. Note: this is not needed if you are using the API access. <br>Default <code>0</code> means any call gets added to the history.<br>
-				<br><b>Possible values:</b> <code>time</code> in <code>seconds</code>
-				<br><b>Default value:</b> <code>0</code>
 			</td>
 		</tr>
 		<tr>
