@@ -44,8 +44,17 @@ def main(args):
         user=args.username,
         password=args.password
     )
-    handle.download_recent_calls(args.directory)
+    
+    if args.contacts_only:
+        handle.download_phone_book(args.directory)
+        return
+    
+    if args.calls_only:
+        handle.download_recent_calls(args.directory)
+        return
+    
     handle.download_phone_book(args.directory)
+    handle.download_recent_calls(args.directory)
     sys.exit(0)
 
 if __name__ == "__main__":
@@ -55,6 +64,8 @@ if __name__ == "__main__":
     parser.add_argument('-u', '--username', nargs='?', default='', help='username')
     parser.add_argument('-P', '--port', nargs='?', default=49000, help='tr064 port')
     parser.add_argument('-i', '--ip', nargs='?', default="192.168.178.1", help='ip')
+    parser.add_argument('-co', '--contacts-only', action='store_true', help='only return contacts')
+    parser.add_argument('-ca', '--calls-only', action='store_true', help='only return calls')
     args = parser.parse_args()
 
     main(args)
