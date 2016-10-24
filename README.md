@@ -7,7 +7,7 @@ This an extension for the [MagicMirror](https://github.com/MichMich/MagicMirror)
 1. Navigate into your MagicMirror's `modules` folder and execute `git clone https://github.com/paviro/MMM-FRITZ-Box-Callmonitor.git`. A new folder will appear navigate into it.
 2. Execute `npm install` to install the dependencies.
 3. (Optional) Execute `sudo apt-get install python-dev libxml2-dev libxslt1-dev zlib1g-dev && sudo pip install fritzconnection` to allow access to your FRITZ!Box phone book and recent calls. This can take a few minutes.
-4. Activate the callmonitor of your FRITZ!Box by calling `#96*5*` on a connected phone.
+4. Activate the callmonitor of your FRITZ!Box by calling `#96*5*` on a connected phone (Fritz Fon App won't work).
 
 ## Using the module
 
