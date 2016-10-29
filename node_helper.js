@@ -108,7 +108,9 @@ module.exports = NodeHelper.create({
 			//In case there is an error reading the vcard file
 			if (err) {
 				self.sendSocketNotification("error", "vcf_parse_error");
-				console.log("[" + self.name + "] " + err);
+				if (self.config.debug) {
+					console.log("[" + self.name + "] error while parsing vCard " + err);
+				}
 				return
 			}
 
@@ -163,7 +165,9 @@ module.exports = NodeHelper.create({
 		xml2js.parseString(body, function (err, result) {
 			if (err) {
 				self.sendSocketNotification("error", "phonebook_parse_error");
-				console.error(self.name + " error while parsing phonebook: " + err);
+				if (self.config.debug) {
+					console.error(self.name + " error while parsing phonebook: " + err);
+				}
 				return;
 			}
 			var contactsArray = result.phonebooks.phonebook[0].contact;

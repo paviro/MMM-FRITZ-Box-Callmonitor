@@ -175,6 +175,14 @@ The following properties can be configured:
 				<br><b>Default value:</b> <code>0.25</code>
 			</td>
 		</tr>
+		<tr>
+			<td><code>debug</code></td>
+			<td>any</td>
+			<td>Should debug information be displayed in case of errors?<br>
+				<br><b>Possible values:</b> <code>true</code> or <code>false</code>
+				<br><b>Default value:</b> <code>false</code>
+			</td>
+		</tr>
 	</tbody>
 </table>
 

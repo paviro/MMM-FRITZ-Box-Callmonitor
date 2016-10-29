@@ -21,6 +21,7 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 		maximumCallDistance: 60,
 		maximumCalls: 5,
 		fade: true,
+		debug: false,
 		fadePoint: 0.25,
 		username: "",
 		password: "",
