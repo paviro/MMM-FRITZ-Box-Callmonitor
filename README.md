@@ -108,12 +108,13 @@ The following properties can be configured:
 			</td>
 		</tr>
 		<tr>
-			<td><code>showAllCalls</code></td>
+			<td><code>deviceFilter</code></td>
 			<td>API</td>
-			<td>Show all calls (`true`) or only missed calls (`false`)?
+			<td> You can enter the names of your real phone devices here (<b>optional</b>). You should be redirected to the list after you login <a href="http://fritz.box/?lp=dectDev">here</a>. <br>
+			Example: <code>deviceFilter: ["firstphone", "secondphone"]</code>.
 			<br>
-				<br><b>Possible values:</b> <code>true</code> or <code>false</code>
-				<br><b>Default value:</b> <code>true</code>
+				<br><b>Possible values:</b> <code>array</code> of <code>strings</code>
+				<br><b>Default value:</b> <code>[]</code>
 			</td>
 		</tr>
 		<tr>
@@ -178,9 +179,11 @@ The following properties can be configured:
 </table>
 
 ## Dependencies
+
 - [node-fritzbox-callmonitor](https://www.npmjs.com/package/node-fritzbox-callmonitor) (installed by `npm install`)
-- [vcard-json](https://www.npmjs.com/package/vcard-json) (installed by `npm install`)
 - [phone-formatter](https://www.npmjs.com/package/phone-formatter) (installed by `npm install`)
+- [python-shell](https://www.npmjs.com/package/python-shell) (installed by `npm install`)
+- [vcard-json](https://www.npmjs.com/package/vcard-json) (installed by `npm install`)
 - [xml2js](https://www.npmjs.com/package/xml2js): (installed by `npm install`)
 - [fritzconnection](https://pypi.python.org/pypi/fritzconnection): (installed by `sudo apt-get install python-dev libxml2-dev libxslt1-dev zlib1g-dev && sudo pip install fritzconnection`)
 
