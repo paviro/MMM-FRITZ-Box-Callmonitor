@@ -1,4 +1,8 @@
-import argparse, os, fritzconnection, urllib2, sys
+import argparse, os, fritzconnection, urllib2, sys, json
+
+def send_file(file, content):
+    print json.dumps({"filename": file, "content": content})
+    sys.stdout.flush()
 
 class FritzAccess(object):
     """
@@ -9,12 +13,12 @@ class FritzAccess(object):
         super(FritzAccess, self).__init__()
         self.fc = fritzconnection.FritzConnection(address, port, user, password)
 
-    def download_recent_calls(self, directory):
+    def download_recent_calls(self, directory = "data"):
         result = self.fc.call_action("X_AVM-DE_OnTel", "GetCallList")
         filename = os.path.join(directory, "calls.xml")
         self.forward_file(result["NewCallListURL"], filename)
 
-    def download_phone_book(self, directory):
+    def download_phone_book(self, directory = "data"):
         result = self.fc.call_action("X_AVM-DE_OnTel", "GetPhonebookList")
         for phonebook_id in result["NewPhonebookList"]:
             result_phonebook = self.fc.call_action("X_AVM-DE_OnTel", "GetPhonebook", NewPhonebookID=phonebook_id)
@@ -25,10 +29,10 @@ class FritzAccess(object):
         try:
             f = urllib2.urlopen(url)
             content = f.read()
-            # replace newline with space, it will be our separator
+            f.close()
+            # replace newline with space keep clear where the file ends
             content = content.replace("\n", " ")
-            print filename
-            print content
+            send_file(filename, content)
         except urllib2.HTTPError, e:
             print "Error (HTTP)", e.code, url
             sys.exit(1)
@@ -46,20 +50,19 @@ def main(args):
     )
     
     if args.contacts_only:
-        handle.download_phone_book(args.directory)
+        handle.download_phone_book()
         return
     
     if args.calls_only:
-        handle.download_recent_calls(args.directory)
+        handle.download_recent_calls()
         return
     
-    handle.download_phone_book(args.directory)
-    handle.download_recent_calls(args.directory)
+    handle.download_phone_book()
+    handle.download_recent_calls()
     sys.exit(0)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='command line utility for FRITZ!Box access to download phone books and recent calls')
-    parser.add_argument('-d', '--directory', nargs='?', default='data', help='output directory')
     parser.add_argument('-p', '--password', nargs='?', default='', help='password')
     parser.add_argument('-u', '--username', nargs='?', default='', help='username')
     parser.add_argument('-P', '--port', nargs='?', default=49000, help='tr064 port')

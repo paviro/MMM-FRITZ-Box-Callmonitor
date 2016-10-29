@@ -9,6 +9,8 @@
 
 Module.register("MMM-FRITZ-Box-Callmonitor", {
 
+	requiresVersion: "2.0.0",
+
 	// Default module config.
 	defaults: {
 		numberFontSize: 30,
@@ -35,12 +37,19 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 		};
 	},
 
+	/*
+	 * ToDo: enable the following method after version MM 2.1.0 is released
+	 */
+	//getHeader: function() {
+	//	return this.data.header + this.getContactsSymbol();
+	//},
+
 	getScripts: function() {
 		return ["moment.js"];
 	},
 
 	getStyles: function() {
-		return ["font-awesome.css"];
+		return ["font-awesome.css", "MMM-FRITZ-Box-Callmonitor.css"];
 	},
 
 	start: function() {
@@ -85,6 +94,7 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 			//Set active Alert to current call
 			this.activeAlert = payload;
 		}
+
 		if (notification === "connected") {
 			//Send notification for currentCall module
 			this.sendNotification("CALL_CONNECTED", payload);
@@ -96,12 +106,13 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 				this.activeAlert = null;
 			}
 		}
+
 		if (notification === "disconnected") {
 			//Send notification for currentCall module
 			this.sendNotification("CALL_DISCONNECTED", payload.caller);
 
 			if (this.config.password !== "") {
-				// if we have an API connection, check if the calls was really missed
+				// if we have an API connection, check if the call was really missed
 				this.sendSocketNotification("RELOAD_CALLS");
 			} else {
 				//Add call to callHistory (timestamp and caller) or if minimumCallLength is set only missed calls
@@ -119,12 +130,14 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 				this.activeAlert = null;
 			}
 		}
+
 		if (notification === "call_history") {
 			//update call history from API
 			this.callHistory = payload;
 
 			this.updateDom(3000);
 		}
+
 		if (notification === "error") {
 			this.contactsLoaded = true;
 			this.contactLoadError = true;
@@ -134,14 +147,44 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 				this.updateDom();
 			}
 		}
+
 		if (notification === "contacts_loaded") {
 			this.contactsLoaded = true;
 			this.numberOfContacts = payload;
 
+			if (this.errorCode === "network_error") {
+				// clear previous network errors, since we got a connection now
+				this.contactLoadError = false;
+				this.errorCode = "";
+			}
 			if (this.config.showContactsStatus) {
 				this.updateDom();
 			}
 		}
+	},
+
+	getContactsSymbol: function() {
+		var html = "";
+		if (this.config.showContactsStatus && (this.config.vCard || this.config.password !== ""))
+		{
+			html += " (<span class='small fa fa-book'/></span>";
+
+			if (this.contactsLoaded)
+			{
+				html += " " + this.numberOfContacts;
+			}
+			else
+			{
+				html += " <span class='small fa fa-refresh fa-spin fa-fw'></span>";
+			}
+			if (this.contactLoadError)
+			{
+				html += " <span class='small fa fa-exclamation-triangle'/></span> ";
+				html += this.translate(this.errorCode);
+			}
+			html += ")";
+		}
+		return html;
 	},
 
 	sortHistory: function() {
@@ -187,25 +230,10 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 		//If there are no calls, set "noCall" text.
 		if (calls.length === 0) {
 			content = this.translate("noCall");
-			if (this.config.showContactsStatus && (this.config.vCard || this.config.password !== ""))
-			{
-				content += " (<span class='small fa fa-book'/></span>";
 
-				if (this.contactsLoaded)
-				{
-					content += " " + this.numberOfContacts;
-				}
-				else
-				{
-					content += " <span class='small fa fa-refresh fa-spin fa-fw'></span>";
-				}
-				if (this.contactLoadError)
-				{
-					content += " <span class='small fa fa-exclamation-triangle'/></span> ";
-					content += this.translate(this.errorCode);
-				}
-				content += ")";
-			}
+			// ToDo: remove this line after version MM 2.1.0 is released
+			content += this.getContactsSymbol();
+
 			wrapper.innerHTML = content;
 			wrapper.className = "xsmall dimmed";
 			return wrapper;
@@ -249,6 +277,28 @@ Module.register("MMM-FRITZ-Box-Callmonitor", {
 			// End Create fade effect by MichMich (MIT)
 		}
 		return wrapper;
+	},
+
+	/* cmpVersions(a,b)
+	 * Compare two symantic version numbers and return the difference.
+	 *
+	 * argument a string - Version number a.
+	 * argument a string - Version number b.
+	 */
+	cmpVersions: function(a, b) {
+		var i, diff;
+		var regExStrip0 = /(\.0+)+$/;
+		var segmentsA = a.replace(regExStrip0, "").split(".");
+		var segmentsB = b.replace(regExStrip0, "").split(".");
+		var l = Math.min(segmentsA.length, segmentsB.length);
+
+		for (i = 0; i < l; i++) {
+			diff = parseInt(segmentsA[i], 10) - parseInt(segmentsB[i], 10);
+			if (diff) {
+				return diff;
+			}
+		}
+		return segmentsA.length - segmentsB.length;
 	}
 
 });

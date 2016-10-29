@@ -7,6 +7,8 @@ const phoneFormatter = require("phone-formatter");
 const xml2js = require("xml2js");
 const moment = require('moment');
 const exec = require('child_process').exec;
+const PythonShell = require('python-shell');
+const path = require("path");
 
 const CALL_TYPE = Object.freeze({
 	INCOMING : "1",
@@ -53,11 +55,12 @@ module.exports = NodeHelper.create({
 
 				this.parseVcardFile();
 				this.setupMonitor();
-				if (this.config.password !== "")
-				{
-					this.loadDataFromAPI();
-				}
 			};
+			//send fresh data to front end (page might have been refreshed)
+			if (this.config.password !== "")
+			{
+				this.loadDataFromAPI();
+			}
 		}
 		if (notification === "RELOAD_CALLS") {
 			this.loadDataFromAPI("--calls-only");
@@ -183,34 +186,52 @@ module.exports = NodeHelper.create({
 	},
 
 	loadDataFromAPI: function(additionalOption) {
-		const PARENT_DIR = 'modules/MMM-FRITZ-Box-Callmonitor/';
-
 		var self = this;
 
-		var options = ['fritz_access.py', '-i', self.config.fritzIP]
-		if (self.config.password !== "")
-		{
-			options.push('-p');
-			options.push(self.config.password);
+		if (self.config.debug) {
+			console.log('Starting access to FRITZ!Box...');
 		}
+
+		var args = ['-i', self.config.fritzIP, '-p', self.config.password];
 		if (self.config.username !== "")
 		{
-			options.push('-u');
-			options.push(self.config.username);
+			args.push('-u');
+			args.push(self.config.username);
 		}
 		if (additionalOption)
 		{
-			options.push(additionalOption);
+			args.push(additionalOption);
 		}
-		exec("python " + options.join(" "), {cwd: PARENT_DIR}, function (error, stdout, stderr) {
+
+		var options = {
+			mode: 'json',
+			scriptPath: path.resolve(__dirname),
+			args: args
+		};
+
+		var pyshell = new PythonShell('fritz_access.py', options);
+
+		pyshell.on('message', function (message) {
+			if (message.filename.indexOf("calls") !== -1)
+			{
+				// call list file
+				self.loadCallList(message.content);
+			} else {
+				// phone book file
+				self.loadPhonebook(message.content);
+			}
+		});
+
+		// end the input stream and allow the process to exit
+		pyshell.end(function (error) {
 			if (error) {
 				var errorUnknown = true;
-				if (stderr.indexOf("XMLSyntaxError") !== -1) {
+				if (error.traceback.indexOf("XMLSyntaxError") !== -1) {
 					// password is probably wrong
 					self.sendSocketNotification("error", "login_error");
 					errorUnknown = false;
 				}
-				if (stderr.indexOf("failed to load external entity") !== -1) {
+				if (error.traceback.indexOf("failed to load external entity") !== -1) {
 					// probably no network connection
 					self.sendSocketNotification("error", "network_error");
 					errorUnknown = false;
@@ -218,25 +239,14 @@ module.exports = NodeHelper.create({
 				if (errorUnknown) {
 					self.sendSocketNotification("error", "unknown_error");
 				}
-				console.error(self.name + " error while accessing FRITZ!Box: ");
-				console.error(stderr);
-				console.log(stdout);
+				if (self.config.debug) {
+					console.error(self.name + " error while accessing FRITZ!Box: ");
+					console.error(error.traceback);					
+				}
 				return;
 			}
-			var files = stdout.split("\n");
-			for (var i = 0; i + 1 < files.length; i += 2)
-			{
-				var filename = files[i];
-				var content = files[i + 1];
-
-				if (filename.indexOf("calls") !== -1)
-				{
-					// call list file
-					self.loadCallList(content);
-				} else {
-					// phone book file
-					self.loadPhonebook(content);
-				}
+			if (self.config.debug) {
+				console.log('Access to FRITZ!Box finished.');
 			}
 		});
 	}
