@@ -20,6 +20,9 @@ class FritzAccess(object):
 
     def download_phone_book(self, directory = "data"):
         result = self.fc.call_action("X_AVM-DE_OnTel", "GetPhonebookList")
+        if (len(result) == 0):
+            raise Exception("Please check if your user has access to \"View and edit FRITZ!Box settings\".")
+            sys.exit(1)
         for phonebook_id in result["NewPhonebookList"]:
             result_phonebook = self.fc.call_action("X_AVM-DE_OnTel", "GetPhonebook", NewPhonebookID=phonebook_id)
             filename = os.path.join(directory, "pbook_%s.xml" % phonebook_id)
@@ -34,10 +37,10 @@ class FritzAccess(object):
             content = content.replace("\n", " ")
             send_file(filename, content)
         except urllib2.HTTPError, e:
-            print "Error (HTTP)", e.code, url
+            raise Exception("Error (HTTP)" + str(e.code) + url)
             sys.exit(1)
         except urllib2.URLError, e:
-            print "Error (URL)", e.reason, url
+            raise Exception("Error (URL)" + str(e.code) + url)
             sys.exit(1)
 
 
