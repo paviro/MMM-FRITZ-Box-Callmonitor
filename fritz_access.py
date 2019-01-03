@@ -23,7 +23,7 @@ class FritzAccess(object):
         if (len(result) == 0):
             raise Exception("Please check if your user has access to \"View and edit FRITZ!Box settings\".")
             sys.exit(1)
-        for phonebook_id in result["NewPhonebookList"]:
+        for phonebook_id in result["NewPhonebookList"].replace(",", ""):
             result_phonebook = self.fc.call_action("X_AVM-DE_OnTel", "GetPhonebook", NewPhonebookID=phonebook_id)
             filename = os.path.join(directory, "pbook_%s.xml" % phonebook_id)
             self.forward_file(result_phonebook["NewPhonebookURL"], filename)
