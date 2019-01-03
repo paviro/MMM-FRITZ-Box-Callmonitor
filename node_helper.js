@@ -7,7 +7,7 @@ const phoneFormatter = require("phone-formatter");
 const xml2js = require("xml2js");
 const moment = require('moment');
 const exec = require('child_process').exec;
-const PythonShell = require('python-shell');
+const {PythonShell} = require('python-shell');
 const path = require("path");
 
 const CALL_TYPE = Object.freeze({
@@ -196,7 +196,7 @@ module.exports = NodeHelper.create({
 			console.log('Starting access to FRITZ!Box...');
 		}
 
-		var args = ['-i', self.config.fritzIP, '-p', self.config.password];
+		let args = ['-i', self.config.fritzIP, '-p', self.config.password];
 		if (self.config.username !== "")
 		{
 			args.push('-u');
@@ -207,13 +207,14 @@ module.exports = NodeHelper.create({
 			args.push(additionalOption);
 		}
 
-		var options = {
+		let options = {
+                        pythonPath: 'python',
 			mode: 'json',
 			scriptPath: path.resolve(__dirname),
 			args: args
 		};
 
-		var pyshell = new PythonShell('fritz_access.py', options);
+		let pyshell = new PythonShell('fritz_access.py', options);
 
 		pyshell.on('message', function (message) {
 			if (message.filename.indexOf("calls") !== -1)
