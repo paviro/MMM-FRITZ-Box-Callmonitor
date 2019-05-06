@@ -11,15 +11,16 @@ const PythonShell = require('python-shell');
 const path = require("path");
 
 const CALL_TYPE = Object.freeze({
-	INCOMING : "1",
-	MISSED : "2",
-	OUTGOING : "3"
+	INCOMING: "1",
+	MISSED: "2",
+	OUTGOING: "3"
 })
 // outgoing missed calls are not in the list
 
 module.exports = NodeHelper.create({
 	// Subclass start method.
-	start: function() {
+	start: function () {
+		this.ownNumbers = []
 		this.started = false;
 		//create adressbook dictionary
 		this.AddressBook = {};
@@ -30,7 +31,7 @@ module.exports = NodeHelper.create({
 		return phoneFormatter.normalize(number.replace(/\s/g, ""));
 	},
 
-	getName: function(number) {
+	getName: function (number) {
 		//Normalize number
 		var number_formatted = this.normalizePhoneNumber(number);
 		//Check if number is in AdressBook if yes return the name
@@ -42,7 +43,7 @@ module.exports = NodeHelper.create({
 		}
 	},
 
-	socketNotificationReceived: function(notification, payload) {
+	socketNotificationReceived: function (notification, payload) {
 		//Received config from client
 		if (notification === "CONFIG") {
 			//set config to config send by client
@@ -57,8 +58,7 @@ module.exports = NodeHelper.create({
 				this.setupMonitor();
 			};
 			//send fresh data to front end (page might have been refreshed)
-			if (this.config.password !== "")
-			{
+			if (this.config.password !== "") {
 				this.loadDataFromAPI();
 			}
 		}
@@ -70,7 +70,7 @@ module.exports = NodeHelper.create({
 		}
 	},
 
-	setupMonitor: function() {
+	setupMonitor: function () {
 		//helper variable so that the module-this is available inside our callbacks
 		var self = this;
 
@@ -78,33 +78,49 @@ module.exports = NodeHelper.create({
 		var monitor = new CallMonitor(this.config.fritzIP, this.config.fritzPort);
 
 		//Incoming call
-		monitor.on("inbound", function(call) {
+		monitor.on("inbound", function (call) {
 			//If caller is not empty
 			if (call.caller != "") {
 				self.sendSocketNotification("call", self.getName(call.caller));
 			};
 		});
+		monitor.on("outbound", function (call) {
+			//Save own number (call.caller) to ownNumbers Array to distinguish inbound/outbound on "connected" handler
+			if (!self.ownNumbers.includes(call.caller))
+				self.ownNumbers.push(call.caller)
+			self.sendSocketNotification("outbound", call.called);
+
+		});
 
 		//Call accepted
-		monitor.on("connected", function(call) {
-			self.sendSocketNotification("connected", self.getName(call.caller));
+		monitor.on("connected", function (call) {
+			if (self.ownNumbers.includes(call.caller))
+				var name = self.getName(call.called)
+			else
+				var name = self.getName(call.caller)
+			self.sendSocketNotification("connected", name);
+
 		});
 
 		//Caller disconnected
-		monitor.on("disconnected", function(call) {
+		monitor.on("disconnected", function (call) {
+			if (call.type === 'outbound')
+				var name = self.getName(call.called)
+			else
+				var name = self.getName(call.caller)
 			//send clear command to interface
-			self.sendSocketNotification("disconnected", {"caller": self.getName(call.caller), "duration": call.duration});
+			self.sendSocketNotification("disconnected", { "caller": name, "duration": call.duration });
 		});
 		console.log(this.name + " is waiting for incoming calls.");
 	},
 
-	parseVcardFile: function() {
+	parseVcardFile: function () {
 		var self = this;
 
 		if (!this.config.vCard) {
 			return;
 		}
-		vcard.parseVcardFile(self.config.vCard, function(err, data) {
+		vcard.parseVcardFile(self.config.vCard, function (err, data) {
 			//In case there is an error reading the vcard file
 			if (err) {
 				self.sendSocketNotification("error", "vcf_parse_error");
@@ -126,7 +142,7 @@ module.exports = NodeHelper.create({
 		});
 	},
 
-	loadCallList: function(body) {
+	loadCallList: function (body) {
 		var self = this;
 
 		xml2js.parseString(body, function (err, result) {
@@ -138,28 +154,28 @@ module.exports = NodeHelper.create({
 			var callArray = result.root.Call;
 			var callHistory = []
 
-			for (var index in callArray)
-			{
+			for (var index in callArray) {
 				var call = callArray[index];
 				var type = call.Type[0];
 				if (type == CALL_TYPE.MISSED || type == CALL_TYPE.INCOMING)
-				{
-					if (type == CALL_TYPE.INCOMING && self.config.deviceFilter && self.config.deviceFilter.indexOf(call.Device[0]) > -1) {
-						continue;
-					}
-					var callInfo = {"time": moment(call.Date[0], "DD.MM.YY HH:mm"), "caller": self.getName(call.Caller[0])};
-					if (call.Name[0])
-					{
-						callInfo.caller = call.Name[0];
-					}
-					callHistory.push(callInfo)
+					var name = self.getName(call.Caller[0])
+				else
+					var name = self.getName(call.Called[0])
+				if (type == CALL_TYPE.INCOMING && self.config.deviceFilter && self.config.deviceFilter.indexOf(call.Device[0]) > -1) {
+					continue;
 				}
+				var callInfo = { "time": moment(call.Date[0], "DD.MM.YY HH:mm"), "caller": name, "type": type };
+				if (call.Name[0]) {
+					callInfo.caller = call.Name[0];
+				}
+				callHistory.push(callInfo)
+
 			}
 			self.sendSocketNotification("call_history", callHistory);
 		});
 	},
 
-	loadPhonebook: function(body) {
+	loadPhonebook: function (body) {
 		var self = this;
 
 		xml2js.parseString(body, function (err, result) {
@@ -171,16 +187,14 @@ module.exports = NodeHelper.create({
 				return;
 			}
 			var contactsArray = result.phonebooks.phonebook[0].contact;
-			for (var index in contactsArray)
-			{
+			for (var index in contactsArray) {
 				var contact = contactsArray[index];
 
 
 				var contactNumbers = contact.telephony[0].number;
 				var contactName = contact.person[0].realName;
 
-				for (var index in contactNumbers)
-				{
+				for (var index in contactNumbers) {
 					var currentNumber = self.normalizePhoneNumber(contactNumbers[index]._);
 					self.AddressBook[currentNumber] = contactName[0];
 				}
@@ -189,7 +203,7 @@ module.exports = NodeHelper.create({
 		});
 	},
 
-	loadDataFromAPI: function(additionalOption) {
+	loadDataFromAPI: function (additionalOption) {
 		var self = this;
 
 		if (self.config.debug) {
@@ -197,13 +211,11 @@ module.exports = NodeHelper.create({
 		}
 
 		var args = ['-i', self.config.fritzIP, '-p', self.config.password];
-		if (self.config.username !== "")
-		{
+		if (self.config.username !== "") {
 			args.push('-u');
 			args.push(self.config.username);
 		}
-		if (additionalOption)
-		{
+		if (additionalOption) {
 			args.push(additionalOption);
 		}
 
@@ -216,8 +228,7 @@ module.exports = NodeHelper.create({
 		var pyshell = new PythonShell('fritz_access.py', options);
 
 		pyshell.on('message', function (message) {
-			if (message.filename.indexOf("calls") !== -1)
-			{
+			if (message.filename.indexOf("calls") !== -1) {
 				// call list file
 				self.loadCallList(message.content);
 			} else {
@@ -245,7 +256,7 @@ module.exports = NodeHelper.create({
 				}
 				if (self.config.debug) {
 					console.error(self.name + " error while accessing FRITZ!Box: ");
-					console.error(error.traceback);					
+					console.error(error.traceback);
 				}
 				return;
 			}
